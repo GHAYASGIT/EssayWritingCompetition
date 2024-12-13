@@ -176,7 +176,7 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Profile $profile)
+    public function destroy(Profile $profile)
     {
         $profile->delete();
 

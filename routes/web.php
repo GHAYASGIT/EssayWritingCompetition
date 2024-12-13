@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoriesController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,7 +20,8 @@ Route::middleware('auth')->group(function () {
         'permission'    => PermissionController::class, 
         'role'          => RoleController::class, 
         'user'          => UserController::class,
-        'profile'       => ProfileController::class
+        'profile'       => ProfileController::class,
+        'categories'    => CategoriesController::class
     ]);    
 
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

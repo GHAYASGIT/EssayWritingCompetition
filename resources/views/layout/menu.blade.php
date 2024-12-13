@@ -52,5 +52,22 @@
                 </ul>
             </li>
         @endhasanyrole
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">{{ __('Events') }}</span>
+        </li>
+        <li class="menu-item @if(in_array(Request::segment(1), ['categories'])) open active @endif">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="User Management">{{ __('Event Management') }}</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @if(Request::segment(1) == 'categories') active @endif">
+                    <a href="{{ route('categories.index') }}" class="menu-link">
+                        <div data-i18n="Categories">{{ __('Categories') }}</div>
+                    </a>
+                </li>
+            </ul>
+        </li>        
     </ul>
   </aside>
