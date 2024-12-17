@@ -26,6 +26,21 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-lable d-block">Category Status</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input @error('status') is-invalid @enderror" type="radio" name="status" id="active" value="active">
+                    <label class="form-check-label" for="active">Active</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input @error('status') is-invalid @enderror" type="radio" name="status" id="inactive" value="inactive">
+                    <label class="form-check-label" for="inactive">Inactive</label>
+                </div>
+                @error('status')
+                    <p class="invalid-feedback d-block"> {{ $message }} </p>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label" for="note">Category Note</label>
                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note" value="{{ old('note') }}" id="note" placeholder="Category Note">
                 @error('note')

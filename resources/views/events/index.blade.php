@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Categories')
+@section('title', 'Events')
 
 @section('content')
 
@@ -8,9 +8,9 @@
 
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
-        <h5 class="card-header">{{ __('Categories') }}</h5>
-        <a href="{{ route('categories.create') }}" class="btn btn-primary border-0 m-3">
-            <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Categories
+        <h5 class="card-header">{{ __('Events') }}</h5>
+        <a href="{{ route('events.create') }}" class="btn btn-primary border-0 m-3">
+            <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Events
         </a>
     </div>
     <div class="table-responsive text-nowrap">
@@ -18,34 +18,40 @@
             <thead>
                 <tr>
                     <th>#ID</th>
-                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Category</th>
                     <th>Status</th>
-                    <th>Notes</th>
                     <th>Created By</th>
+                    <th>Started At</th>
+                    <th>End At</th>
+                    <th>Created At</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($categories as $category)
+                @forelse ($events as $event)
                     <tr>
                         <th scope="row"> {{ ++$i }} </th>
-                        <td>{{ $category->name }}</td>
+                        <td>{{ $event->name }}</td>
+                        <td>{{ $event->category->name }}</td>
                         <td>
-                            @switch($category->status)
+                            @switch($event->status)
                                 @case('active')
-                                    <span class="badge rounded-pill bg-success">{{ $category->status }}</span>
+                                    <span class="badge rounded-pill bg-success">{{ $event->status }}</span>
                                     @break
 
                                 @case('inactive')
-                                    <span class="badge rounded-pill bg-danger">{{ $category->status }}</span>
+                                    <span class="badge rounded-pill bg-danger">{{ $event->status }}</span>
                                     @break
                             
                                 @default
                                     <span></span>                                    
                             @endswitch
                         </td>
-                        <td>{{ $category->notes }}</td>
-                        <td>{{ $category->user->name }} ({{ $category->user->getRoleNames()->implode(' | ') }})</td>
+                        <td>{{ $event->user->name }} ({{ $event->user->getRoleNames()->implode(' | ') }})</td>
+                        <td>{{ \Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:m A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:m A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($event->created_at)->format('d-m-Y h:m A') }}</td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-outline-info dropdown-toggle p-2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -59,16 +65,28 @@
                                         <hr class="dropdown-divider">
                                     </li> --}}
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('categories.edit', $category->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
+                                        <a class="dropdown-item d-flex align-items-center text-success" href="{{ route('events.active',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Active</span></a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
+                                        <a class="dropdown-item d-flex align-items-center text-danger" href="{{ route('events.inactive',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Inactive</span></a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('events.edit', $event->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('events.destroy', $event->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></a>
+                                            <button type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></button>
                                         </form>
                                     </li>
                                 </ul>
@@ -84,7 +102,7 @@
             <tfoot>
                 <tr>
                     <td colspan="3">
-                        {!! $categories->links('pagination::bootstrap-5') !!}
+                        {!! $events->links('pagination::bootstrap-5') !!}
                     </td>
                 </tr>
             </tfoot>

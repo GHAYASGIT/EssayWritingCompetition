@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class CategoriesController extends Controller
      */
     public function index(): View
     {
-        $categories = Categories::orderBy('name')->latest()->paginate(8);
+        $categories = Categories::with('user')->orderBy('name')->latest()->paginate(8);
         return view('event_categories.index', compact('categories'))->with('i', (request()->input('page', 1) - 1) * 8);
     }
 
@@ -32,16 +33,18 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:50',
-            'note' => 'required|string|max:255',
+            'name'  => 'required|string|max:50',
+            'note'  => 'string|max:255',
+            'status'=> 'required|string|in:active,inactive',
         ]);
 
         $user = Auth::user();
 
         Categories::create([
-            'user_id'  =>  $user->id,
-            'name'  =>  $request->name,
-            'notes' =>  $request->note
+            'user_id'   =>  $user->id,
+            'name'      =>  $request->name,
+            'status'    =>  $request->status,
+            'notes'     =>  $request->note
         ]);
 
         return redirect('categories/create')->with('success', 'Category Created.');
@@ -66,16 +69,18 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categories $categories)
+    public function update(Request $request, Categories $category)
     {
         $request->validate([
             'name' => 'required|string|max:50',
             'note' => 'required|string|max:255',
+            'status'=> 'required|string|in:active,inactive',
         ]);
 
-        $categories->update([
-            'name'  =>  $request->name,
-            'notes' =>  $request->note
+        $category->update([
+            'name'      =>  $request->name,
+            'notes'     =>  $request->note,
+            'status'    =>  $request->status
         ]);
 
         return redirect('categories')->with('success', 'Category Updated.');
@@ -86,6 +91,7 @@ class CategoriesController extends Controller
      */
     public function destroy(Categories $categories)
     {
-        //
+        $categories->delete();
+        return redirect('categories')->with('success', 'Category Deleted.');
     }
 }

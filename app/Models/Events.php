@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Events extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'categories';
+    protected $table = 'events';
 
     /**
      * The attributes that are mass assignable.
@@ -20,12 +20,21 @@ class Categories extends Model
      */
     protected $fillable = [
         'user_id',
+        'category_id',
         'name',
-        'notes',
-        'status'
+        'image',
+        'subscribers',
+        'description',
+        'started_at',
+        'end_at',
+        'status',
     ];
 
     public function user() : object {
         return $this->belongsTo(User::class);
+    }
+
+    public function category() : object {
+        return $this->belongsTo(Categories::class);
     }
 }

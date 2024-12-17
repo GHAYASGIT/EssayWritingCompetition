@@ -87,7 +87,7 @@
                                     @endif
 
                                     @if (session('error'))
-                                        <div class="bs-toast toast fade show bg-success floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
+                                        <div class="bs-toast toast fade show bg-danger floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
                                             <div class="toast-header">
                                                 <i class="bx bx-bell me-2"></i>
                                                 <div class="me-auto fw-semibold">{{ __('Oh No!') }}</div>
