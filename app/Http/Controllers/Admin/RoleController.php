@@ -16,7 +16,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::latest()->paginate(8);
-        return view('role-permission.roles.index', compact('roles'))->with('i', (request()->input('page', 1) - 1) * 8);
+        return view('admin.role-permission.roles.index', compact('roles'))->with('i', (request()->input('page', 1) - 1) * 8);
     }
 
     /**
@@ -25,7 +25,8 @@ class RoleController extends Controller
     public function create(): View
     {
         $permissions = Permission::orderBy('name', 'ASC')->get();
-        return view('role-permission.roles.create', compact('permissions'));
+        $guards = array_keys(config('auth.guards'));
+        return view('admin.role-permission.roles.create', compact('permissions', 'guards'));
     }
 
     /**
@@ -34,15 +35,13 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'unique:roles,name'
-            ]
+            'name'  => 'required|string|unique:roles,name',
+            'guard' => 'required|string'
         ]);
 
         $role = Role::create([
-            'name' => $request->name
+            'name'          => $request->name,
+            'guard_name'    => $request->guard
         ]);
 
         if(!empty($request->permission)){
@@ -51,7 +50,7 @@ class RoleController extends Controller
             }
         }
 
-        return redirect('role/create')->with('success', 'Role Created.');
+        return redirect('admin/role/create')->with('success', 'Role Created.');
     }
 
     /**
@@ -59,7 +58,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return view('role-permission.roles.show',compact('role'));
+        return view('admin.role-permission.roles.show',compact('role'));
     }
 
     /**
@@ -68,7 +67,8 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $permissions = Permission::orderBy('name', 'ASC')->get();
-        return view('role-permission.roles.edit', compact('role','permissions'));
+        $guards = array_keys(config('auth.guards'));
+        return view('admin.role-permission.roles.edit', compact('role','permissions','guards'));
     }
 
     /**
@@ -92,7 +92,7 @@ class RoleController extends Controller
             $role->syncPermissions($request->permission);
         }
         
-        return redirect('role')->with('success', 'Role Updated.');
+        return redirect('admin/role')->with('success', 'Role Updated.');
     }
 
     /**
@@ -102,6 +102,6 @@ class RoleController extends Controller
     {
         $role->delete();
 
-        return redirect('role')->with('success','Role Deleted.');
+        return redirect('admin/role')->with('success','Role Deleted.');
     }
 }

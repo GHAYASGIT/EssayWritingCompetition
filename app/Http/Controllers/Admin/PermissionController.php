@@ -15,7 +15,7 @@ class PermissionController extends Controller
     public function index(): View
     {
         $permissions = Permission::orderBy('name')->latest()->paginate(8);
-        return view('role-permission.permission.index', compact('permissions'))->with('i', (request()->input('page', 1) - 1) * 8);
+        return view('admin.role-permission.permission.index', compact('permissions'))->with('i', (request()->input('page', 1) - 1) * 8);
     }
 
     /**
@@ -23,7 +23,8 @@ class PermissionController extends Controller
      */
     public function create(): View
     {
-        return view('role-permission.permission.create');
+        $guards = array_keys(config('auth.guards'));
+        return view('admin.role-permission.permission.create', compact('guards'));
     }
 
     /**
@@ -32,18 +33,16 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'unique:permissions,name'
-            ]
+            'name' => 'required|string',
+            'guard' => 'required|string'
         ]);
 
         Permission::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'guard_name'    => $request->guard
         ]);
 
-        return redirect('permission/create')->with('success', 'Permisssion Created.');
+        return redirect('admin/permission/create')->with('success', 'Permisssion Created.');
     }
 
     /**
@@ -51,7 +50,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        return view('role-permission.permission.show',compact('permission'));
+        return view('admin.role-permission.permission.show',compact('permission'));
     }
 
     /**
@@ -59,7 +58,8 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission): View
     {
-        return view('role-permission.permission.edit', compact('permission'));
+        $guards = array_keys(config('auth.guards'));
+        return view('admin.role-permission.permission.edit', compact('permission', 'guards'));
     }
 
     /**
@@ -68,18 +68,16 @@ class PermissionController extends Controller
     public function update(Request $request, Permission $permission)
     {
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'unique:permissions,name,'.$permission->id
-            ]
+            'name' => 'required|string|unique:permissions,name,'.$permission->id,
+            'guard' => 'required|string'
         ]);
 
         $permission->update([
             'name' => $request->name,
+            'guard_name'    => $request->guard
         ]);
         
-        return redirect('permission')->with('success', 'Permission Updated.');
+        return redirect('admin/permission')->with('success', 'Permission Updated.');
     }
 
     /**
@@ -89,6 +87,6 @@ class PermissionController extends Controller
     {
         $permission->delete();
 
-        return redirect('permission')->with('success','Permission Deleted.');
+        return redirect('admin/permission')->with('success','Permission Deleted.');
     }
 }

@@ -1,6 +1,6 @@
-@extends('layout.app')
+@extends('admin.layout.app')
 
-@section('title', 'Edit User')
+@section('title', 'Create User')
 
 @section('content')
 
@@ -8,19 +8,18 @@
 
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
-        <h5 class="card-header">{{ __('Edit User') }}</h5>
-        <a href="{{ route('user.index') }}" class="btn btn-primary border-0 m-3">
+        <h5 class="card-header">{{ __('Create User') }}</h5>
+        <a href="{{ route('admin.user.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
 
-    <div class="card-body m-3">
-        <form method="POST" action="{{ route('user.update', $user->id) }}">
+    <div class="card-body mx-auto w-50">
+        <form method="POST" action="{{ route('admin.user.store') }}">
             @csrf
-            @method('put')
             <div class="mb-3">
                 <label class="form-label" for="name">Name</label>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $user->name) }}" id="name" @required(true) placeholder="Name">
+                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" @required(true) placeholder="Name">
                 @error('name')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
@@ -28,7 +27,7 @@
 
             <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" id="email" @required(true) placeholder="Enter Email">
+                <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" id="email" @required(true) placeholder="Enter Email">
                 @error('email')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
@@ -36,12 +35,12 @@
 
             <div class="mb-3">
                 <label for="role" class="form-label">Role</label>
-                <select multiple id="role" name="role[]" class="form-select">
+                <select id="role" name="role[]" class="form-select" multiple>
                     @foreach ($roles as $role)
-                        <option {{ $user->roles->pluck('name')->contains($role->name) ? 'selected' : '' }} value="{{ $role->name }}">{{ $role->name }}</option>
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
-            </div>            
+            </div>
 
             <div class="mb-3 form-password-toggle">
                 <label class="form-label" for="password">Password</label>
@@ -51,9 +50,10 @@
                         id="password"
                         class="form-control @error('password') is-invalid @enderror"
                         name="password"
+                        value="{{ old('password') }}"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
-                        autocomplete="new-password"
+                        required autocomplete="new-password"
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
 
@@ -72,9 +72,10 @@
                         id="password_confirmation"
                         class="form-control @error('password_confirmation') is-invalid @enderror"
                         name="password_confirmation"
+                        value="{{ old('password_confirmation') }}"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password_confirmation"
-                        autocomplete="new-confirmation"
+                        required autocomplete="new-confirmation"
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
 

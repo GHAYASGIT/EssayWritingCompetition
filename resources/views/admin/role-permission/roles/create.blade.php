@@ -9,13 +9,13 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Create Roles') }}</h5>
-        <a href="{{ route('role.index') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.role.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
 
     <div class="card-body mx-auto w-50">
-        <form method="POST" action="{{ route('role.store') }}">
+        <form method="POST" action="{{ route('admin.role.store') }}">
             @csrf
             <div class="mb-3">
                 <label class="form-label" for="name">{{ __('Role Name') }}</label>
@@ -25,6 +25,20 @@
                 @enderror
             </div>
 
+            <div class="mb-3">
+                <label for="guard" class="form-label">Select Authontication Guard</label>
+                <select id="guard" name="guard" class="form-select @error('guard') is-invalid @enderror">
+                    <option value="">{{ __('---select---') }}</option>
+                    @foreach ($guards as $guard)
+                        <option value="{{ $guard }}" @if(old('guard') == $guard) selected @endif>{{ $guard }}</option>
+                    @endforeach
+                </select>
+                @error('guard')
+                    <p class="invalid-feedback"> {{ $message }} </p>
+                @enderror
+            </div>
+
+            {{-- TODO need to impliment print permission according to guard name --}}
             <div class="mb-3">
                 <div class="form-label">{{ __('Assign permission to role') }}</div>
                 @isset($permissions)

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('notes')->nullable();
             $table->enum('status', ['active', 'inactive']);
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('user_id')->references('id')->on('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

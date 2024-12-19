@@ -18,7 +18,7 @@ class EventsController extends Controller
     public function index(): View
     {
         $events = Events::with(['user','category'])->orderBy('name')->latest()->paginate(8);
-        return view('events.index', compact('events'))->with('i', (request()->input('page', 1) - 1) * 8);
+        return view('admin.events.index', compact('events'))->with('i', (request()->input('page', 1) - 1) * 8);
     }
 
     /**
@@ -27,7 +27,7 @@ class EventsController extends Controller
     public function create(): View
     {
         $categories = Categories::select(['id','name'])->get();
-        return view('events.create', compact('categories'));
+        return view('admin.events.create', compact('categories'));
     }
 
     /**
@@ -78,7 +78,7 @@ class EventsController extends Controller
 
         Events::create($data);
 
-        return redirect('events/create')->with('success', 'Event Created.');
+        return redirect('admin/events/create')->with('success', 'Event Created.');
     }
 
     /**
@@ -95,7 +95,7 @@ class EventsController extends Controller
     public function edit(Events $event)
     {
         $categories = Categories::select(['id','name'])->get();
-        return view('events.edit', compact('event','categories'));
+        return view('admin.events.edit', compact('event','categories'));
     }
 
     /**
@@ -153,7 +153,7 @@ class EventsController extends Controller
 
         $event->update($data);
 
-        return redirect('events')->with('success', 'Event Created.');
+        return redirect('admin/events')->with('success', 'Event Created.');
     }
 
     /**
@@ -168,7 +168,7 @@ class EventsController extends Controller
         }
 
         $event->delete();
-        return redirect('events')->with('success', 'Event Deleted.');
+        return redirect('admin/events')->with('success', 'Event Deleted.');
     }
 
     public function active($id)
@@ -176,9 +176,9 @@ class EventsController extends Controller
         try{
             $event = Events::findOrFail($id);
             $event->update(['status' => 'active']);
-            return redirect('events')->with('success', 'Event Activated.');    
+            return redirect('admin/events')->with('success', 'Event Activated.');    
         }catch(ModelNotFoundException $e){
-            return redirect('events')->with('error', 'No record found for the given value.');
+            return redirect('admin/events')->with('error', 'No record found for the given value.');
         }
     }
 
@@ -187,9 +187,9 @@ class EventsController extends Controller
         try{
             $event = Events::findOrFail($id);
             $event->update(['status' => 'inactive']);
-            return redirect('events')->with('success', 'Event is inactive.');    
+            return redirect('admin/events')->with('success', 'Event is inactive.');    
         }catch(ModelNotFoundException $e){
-            return redirect('events')->with('error', 'No record found for the given value.');
+            return redirect('admin/events')->with('error', 'No record found for the given value.');
         }
     }
 }

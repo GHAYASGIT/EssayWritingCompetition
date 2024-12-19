@@ -45,4 +45,6 @@ class Admin extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected function getDefaultGuardName(): string { return $this->guard; }
 }

@@ -9,7 +9,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
         <h5 class="card-header">{{ __('Events') }}</h5>
-        <a href="{{ route('events.create') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.events.create') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Events
         </a>
     </div>
@@ -59,31 +59,31 @@
                                 </button>
                                 <ul class="dropdown-menu" style="">
                                     {{-- <li>
-                                        <a class="dropdown-item d-flex align-items-center text-info" href="{{ route('categories.show',$category->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3">View</span></a>
+                                        <a class="dropdown-item d-flex align-items-center text-info" href="{{ route('admin.categories.show',$category->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3">View</span></a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li> --}}
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center text-success" href="{{ route('events.active',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Active</span></a>
+                                        <a class="dropdown-item d-flex align-items-center text-success" href="{{ route('admin.events.active',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Active</span></a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center text-danger" href="{{ route('events.inactive',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Inactive</span></a>
+                                        <a class="dropdown-item d-flex align-items-center text-danger" href="{{ route('admin.events.inactive',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Inactive</span></a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('events.edit', $event->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
+                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('admin.events.edit', $event->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <form action="{{ route('events.destroy', $event->id) }}" method="POST">
+                                        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></button>

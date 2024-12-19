@@ -11,7 +11,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
         <h5 class="card-header">{{ __('Permissions') }}</h5>
-        <a href="{{ route('permission.create') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.permission.create') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Permission
         </a>
     </div>
@@ -21,6 +21,7 @@
                 <tr>
                     <th>#ID</th>
                     <th>Name</th>
+                    <th>{{ __('Auth Guard') }}</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -28,11 +29,12 @@
                 @forelse ($permissions as $permission)
                     <tr>
                         <th scope="row"> {{ ++$i }} </th>
-                        <td>{{ $permission->name }}</td>    
+                        <td>{{ $permission->name }}</td>
+                        <td>{{ $permission->guard_name }}</td>
                         <td>
-                            <form action="{{ route('permission.destroy',$permission->id) }}" method="POST">
-                                {{-- <a class="btn rounded-pill btn-icon btn-info" href="{{ route('permission.show',$permission->id) }}"><span class="tf-icons bx bx-show"></span></a> --}}
-                                <a class="btn btn-icon btn-outline-success" href="{{ route('permission.edit',$permission->id) }}"><span class="tf-icons bx bx-edit"></span></a>
+                            <form action="{{ route('admin.permission.destroy',$permission->id) }}" method="POST">
+                                {{-- <a class="btn rounded-pill btn-icon btn-info" href="{{ route('admin.permission.show',$permission->id) }}"><span class="tf-icons bx bx-show"></span></a> --}}
+                                <a class="btn btn-icon btn-outline-success" href="{{ route('admin.permission.edit',$permission->id) }}"><span class="tf-icons bx bx-edit"></span></a>
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-icon btn-outline-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span></button>

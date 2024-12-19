@@ -55,7 +55,9 @@ class ProfileController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $profile = Profile::where('user_id', $id)->first();
+        $user = User::find($id);
+        return view('admin.profile.edit', compact('user', 'profile'));
     }
 
     /**
@@ -63,9 +65,8 @@ class ProfileController extends Controller
      */
     public function update(Request $request, Profile $profile)
     {
-        $user = Auth::user();
-        $user_model = User::where('id', $user->id)->first();
-        $profile = Profile::where('user_id', $user->id)->first();
+        $user = User::find($profile->user_id);
+        // $profile = Profile::where('user_id', $user->id)->first();
 
         if(isset($request->name)){
             $request->validate([
@@ -75,7 +76,7 @@ class ProfileController extends Controller
                 'name' => $request->name,
             ];
             
-            $user_model->update($userdata);
+            $user->update($userdata);
         }
 
         if(isset($request->avatar)){
@@ -162,16 +163,22 @@ class ProfileController extends Controller
 
             $profile_data['zip_code'] = $request->zipcode;
         }
+        if(isset($request->phone_number)){
+            $request->validate([
+                'phone_number'   => 'string|digits:10'
+            ]);
 
-        // dd($profile_data);
-        if(isset($profile->id)){
-            $profile->update($profile_data);
-        }else{
-            Profile::create($profile_data);
+            $profile_data['phone_number'] = $request->phone_number;
         }
 
-
-        return redirect()->route('admin.profile')->with('success','Profile Updated');
+        // dd($profile_data);
+        if(isset($profile->id) && !empty($profile_data)){
+            $profile->update($profile_data);
+        }else{
+            return redirect()->route('admin.user.index');
+        }
+        
+        return redirect()->route('admin.profile.edit', [$user->id])->with('success','Profile Updated');
     }
 
     /**
@@ -179,12 +186,11 @@ class ProfileController extends Controller
      */
     public function destroy(Profile $profile)
     {
+        $user = User::find($profile->user_id);
+        $user->delete();
+
         $profile->delete();
 
-        $user = Auth::user();
-        $user_model = User::where('id', $user->id)->first();
-        $user_model->delete();
-
-        return redirect()->route('admin.profile')->with('success','Profile Deleted');
+        return redirect()->route('admin.user.index')->with('success','Profile Deleted');
     }
 }

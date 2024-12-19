@@ -9,13 +9,13 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Create Events') }}</h5>
-        <a href="{{ route('events.index') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.events.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
 
     <div class="card-body mx-auto w-50">
-        <form method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.events.store') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">

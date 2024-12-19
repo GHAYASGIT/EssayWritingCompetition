@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Events;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
 {
@@ -39,10 +40,10 @@ class HomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
-        $events = Events::find($id);
-        dd($events);        
+        $event = Events::find($id);
+        return view('event.show', compact('event'));
     }
 
     /**

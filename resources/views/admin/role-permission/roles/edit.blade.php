@@ -9,19 +9,32 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Edit Role') }}</h5>
-        <a href="{{ route('role.index') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.role.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
 
     <div class="card-body mx-auto w-50">
-        <form method="POST" action="{{ route('role.update', $role->id) }}">
+        <form method="POST" action="{{ route('admin.role.update', $role->id) }}">
             @csrf
             @method('put')
             <div class="mb-3">
                 <label class="form-label" for="name">Role Name</label>
                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $role->name) }}" id="name" @required(true) placeholder="Role Name">
                 @error('name')
+                    <p class="invalid-feedback"> {{ $message }} </p>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="guard" class="form-label">Select Authontication Guard</label>
+                <select id="guard" name="guard" class="form-select @error('guard') is-invalid @enderror">
+                    <option value="">{{ __('---select---') }}</option>
+                    @foreach ($guards as $guard)
+                        <option value="{{ $guard }}" @if($role->guard_name == $guard) selected @endif>{{ $guard }}</option>
+                    @endforeach
+                </select>
+                @error('guard')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
             </div>

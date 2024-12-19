@@ -9,7 +9,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Update Events') }}</h5>
-        <a href="{{ route('events.index') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.events.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-8">
-                <form method="POST" action="{{ route('events.update', $event->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.events.update', $event->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     

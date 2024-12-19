@@ -26,25 +26,30 @@
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">{{ __('Account') }}</span>
             </li>
-            <li class="menu-item @if(in_array(Request::segment(1), ['user','role','permission'])) open active @endif">
+            <li class="menu-item @if(in_array(Request::segment(2), ['adminuser','user','role','permission'])) open active @endif">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-user"></i>
                     <div data-i18n="User Management">{{ __('User Management') }}</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item @if(Request::segment(1) == 'user') active @endif">
-                        <a href="{{ route('user.index') }}" class="menu-link">
+                    <li class="menu-item @if(Request::segment(2) == 'adminuser') active @endif">
+                        <a href="{{ route('admin.adminuser.index') }}" class="menu-link">
+                            <div data-i18n="Admin Users">{{ __('Admin Users') }}</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @if(Request::segment(2) == 'user') active @endif">
+                        <a href="{{ route('admin.user.index') }}" class="menu-link">
                             <div data-i18n="Users">{{ __('Users') }}</div>
                         </a>
                     </li>
                     @hasrole('super-admin')
-                        <li class="menu-item @if(Request::segment(1) == 'role') active @endif">
-                            <a href="{{ route('role.index') }}" class="menu-link">
+                        <li class="menu-item @if(Request::segment(2) == 'role') active @endif">
+                            <a href="{{ route('admin.role.index') }}" class="menu-link">
                                 <div data-i18n="Roles">{{ __('Roles') }}</div>
                             </a>
                         </li>
-                        <li class="menu-item @if(Request::segment(1) == 'permission') active @endif">
-                            <a href="{{ route('permission.index') }}" class="menu-link">
+                        <li class="menu-item @if(Request::segment(2) == 'permission') active @endif">
+                            <a href="{{ route('admin.permission.index') }}" class="menu-link">
                                 <div data-i18n="Permissions">{{ __('Permissions') }}</div>
                             </a>
                         </li>
@@ -56,18 +61,18 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ __('Events') }}</span>
         </li>
-        <li class="menu-item @if(in_array(Request::segment(1), ['categories','events'])) open active @endif">
+        <li class="menu-item @if(in_array(Request::segment(2), ['categories','events'])) open active @endif">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="User Management">{{ __('Event Management') }}</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item @if(Request::segment(1) == 'categories') active @endif">
+                <li class="menu-item @if(Request::segment(2) == 'categories') active @endif">
                     <a href="{{ route('admin.categories.index') }}" class="menu-link">
                         <div data-i18n="Categories">{{ __('Categories') }}</div>
                     </a>
                 </li>
-                <li class="menu-item @if(Request::segment(1) == 'events') active @endif">
+                <li class="menu-item @if(Request::segment(2) == 'events') active @endif">
                     <a href="{{ route('admin.events.index') }}" class="menu-link">
                         <div data-i18n="events">{{ __('Events') }}</div>
                     </a>

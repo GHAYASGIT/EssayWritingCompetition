@@ -10,7 +10,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
         <h5 class="card-header">{{ __('Roles') }}</h5>
-        <a href="{{ route('role.create') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.role.create') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Role
         </a>
     </div>
@@ -20,6 +20,7 @@
                 <tr>
                     <th>{{ __('#ID') }}</th>
                     <th>{{ __('Name') }}</th>
+                    <th>{{ __('Auth Guard') }}</th>
                     <th>{{ __('Permissions') }}</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
@@ -29,6 +30,7 @@
                     <tr>
                         <th scope="row"> {{ ++$i }} </th>
                         <td>{{ $role->name }}</td>
+                        <td>{{ $role->guard_name }}</td>
                         <td>
                             <button type="button" class="btn btn-icon btn-outline-primary" data-bs-toggle="modal" data-bs-target="#role{{ $role->id }}" ><span class="tf-icons bx bx-show"></span></button>
                             <div class="modal fade" id="role{{ $role->id }}" tabindex="-1" aria-hidden="true">
@@ -48,13 +50,15 @@
                             </div>
                         </td>
                         <td>
-                            <form action="{{ route('role.destroy',$role->id) }}" method="POST">
-                                {{-- <a class="btn rounded-pill btn-icon btn-info" href="{{ route('role.show',$role->id) }}"><span class="tf-icons bx bx-show"></span></a> --}}
-                                <a class="btn btn-icon btn-outline-success" href="{{ route('role.edit',$role->id) }}"><span class="tf-icons bx bx-edit"></span></a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-icon btn-outline-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span></button>
-                            </form>
+                            @if($role->name != 'super-admin')
+                                <form action="{{ route('admin.role.destroy',$role->id) }}" method="POST">
+                                    {{-- <a class="btn rounded-pill btn-icon btn-info" href="{{ route('admin.role.show',$role->id) }}"><span class="tf-icons bx bx-show"></span></a> --}}
+                                    <a class="btn btn-icon btn-outline-success" href="{{ route('admin.role.edit',$role->id) }}"><span class="tf-icons bx bx-edit"></span></a>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-icon btn-outline-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span></button>
+                                </form>
+                            @endif
                         </td>    
                     </tr>
                 @empty
