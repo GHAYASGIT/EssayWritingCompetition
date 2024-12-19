@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\EventsController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\HomeController;
 
 // Route::get('/', function () {
@@ -16,11 +16,12 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/event/show/{id}', [HomeController::class, 'show'])->name('event.show');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/home', function () {
+    // return view('dashboard');
+    return 'Verma';
+})->middleware(['auth', 'verified'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resources([
         'permission'    => PermissionController::class, 
         'role'          => RoleController::class, 
@@ -43,3 +44,4 @@ Route::fallback(function(){
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/admin-auth.php';
