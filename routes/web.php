@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\ProfileController as UserProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminUserController;
@@ -15,12 +16,19 @@ use App\Http\Controllers\HomeController;
 // });
 
 Route::get('/', [HomeController::class, 'index']);
+Route::resource('home', HomeController::class);
 Route::get('/event/show/{id}', [HomeController::class, 'show'])->name('event.show');
 
 Route::get('/home', function () {
     // return view('dashboard');
     return 'Verma';
 })->middleware(['auth', 'verified'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::resources([
+        'profile'       => UserProfileController::class,
+    ]);
+});
 
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resources([
