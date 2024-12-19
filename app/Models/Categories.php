@@ -26,6 +26,6 @@ class Categories extends Model
     ];
 
     public function user() : object {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Admin::class);
     }
 }

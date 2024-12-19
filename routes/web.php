@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\EventsController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\ProfileController as UserProfileController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\EventsController;
 use App\Http\Controllers\HomeController;
 
 // Route::get('/', function () {
@@ -14,16 +16,25 @@ use App\Http\Controllers\HomeController;
 // });
 
 Route::get('/', [HomeController::class, 'index']);
+Route::resource('home', HomeController::class);
 Route::get('/event/show/{id}', [HomeController::class, 'show'])->name('event.show');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/home', function () {
+    // return view('dashboard');
+    return 'Verma';
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::resources([
+        'profile'       => UserProfileController::class,
+    ]);
+});
+
+Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
+    Route::resources([
         'permission'    => PermissionController::class, 
-        'role'          => RoleController::class, 
+        'role'          => RoleController::class,
+        'adminuser'     => AdminUserController::class,
         'user'          => UserController::class,
         'profile'       => ProfileController::class,
         'categories'    => CategoriesController::class,
@@ -43,3 +54,4 @@ Route::fallback(function(){
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/admin-auth.php';
