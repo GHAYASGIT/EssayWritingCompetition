@@ -26,7 +26,7 @@ class AdminUserController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::select('name')->where('guard_name', '=', 'web')->orderBy('name', 'ASC')->get();
+        $roles = Role::select('name')->where('guard_name', '=', 'admin')->orderBy('name', 'ASC')->get();
         return view('admin.admin_user.create', compact('roles'));
     }
 
@@ -67,16 +67,16 @@ class AdminUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Admin $user)
+    public function edit(Admin $adminuser)
     {
-        $roles = Role::select('name')->orderBy('name', 'ASC')->get();
-        return view('admin.admin_user.edit', compact('user','roles'));
+        $roles = Role::select('name')->where('guard_name', '=', 'admin')->orderBy('name', 'ASC')->get();
+        return view('admin.admin_user.edit', compact('adminuser','roles'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Admin $user)
+    public function update(Request $request, Admin $adminuser)
     {
         $request->validate([
             'name'      => ['required', 'string', 'max:255'],
@@ -85,7 +85,7 @@ class AdminUserController extends Controller
             'name' => $request->name,
         ];
 
-        if($user->email != $request->email){
+        if($adminuser->email != $request->email){
             $request->validate([
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Admin::class],
             ]);
@@ -103,10 +103,10 @@ class AdminUserController extends Controller
             ];
         }
 
-        $user->update($data);
+        $adminuser->update($data);
 
         if(isset($request->role)){
-            $user->syncRoles($request->role);
+            $adminuser->syncRoles($request->role);
         }
 
 

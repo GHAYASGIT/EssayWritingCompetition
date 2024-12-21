@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    <div class="card-body mx-auto w-50">
+    <div class="card-body">
         <form method="POST" action="{{ route('admin.categories.update', $category->id) }}">
             @csrf
             @method('put')

@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    <div class="card-body mx-auto w-50">
+    <div class="card-body">
         <form method="POST" action="{{ route('admin.role.update', $role->id) }}">
             @csrf
             @method('put')
@@ -27,6 +27,9 @@
             </div>
 
             <div class="mb-3">
+                <p>{{ __('Your Guard :') }} <span>{{ $role->guard_name }}</span></p>
+            </div>
+            {{-- <div class="mb-3">
                 <label for="guard" class="form-label">Select Authontication Guard</label>
                 <select id="guard" name="guard" class="form-select @error('guard') is-invalid @enderror">
                     <option value="">{{ __('---select---') }}</option>
@@ -37,26 +40,60 @@
                 @error('guard')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
-            </div>
+            </div> --}}
 
             <div class="mb-3">
                 <div class="form-label">{{ __('Assign permission to role') }}</div>
-                @isset($permissions)
-                    @forelse ($permissions as $permission)
-                        <div class="form-check form-check-inline">
-                            <input {{ $role->permissions->pluck('name')->contains($permission->name) ? 'checked' : '' }} class="form-check-input" type="checkbox" name="permission[]" id="{{ $permission->id }}" value="{{ $permission->name }}">
-                            <label class="form-check-label" for="{{ $permission->id }}">{{ $permission->name }}</label>
-                        </div>
-                    @empty
-                        {{ __('No permission found.') }}
-                    @endforelse
-                @endisset
+                <div class="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-2" id='permission'></div>
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>    
     </div>
 </div>
+@endsection
 
+@section('script')
+
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('admin.getpermission') }}",
+            data: {"_token": "{{ csrf_token() }}", 'guard': "{{ $role->guard_name }}", 'role_id': "{{ $role->id }}"},
+            dataType: "JSON",
+            success: function (response) {
+                if(response.data.length !== 0){
+                    $('#permission').html('');
+                    $('#permission').addClass('row-cols-1 row-cols-md-3 row-cols-lg-6 g-2');
+                    var htmlinput = '';
+                    $.each(response.data, function (key, value) {
+                        if($.inArray(value.name, response.role_permission)){
+                            htmlinput += '<div class="col"><div class="form-check form-check-inline">';
+                            htmlinput +='<input class="form-check-input" checked type="checkbox" name="permission[]" id="permission'+value.id+'" value="'+value.name+'"><label class="form-check-label" for="permission'+value.id+'">'+value.name+'</label>';
+                            htmlinput += '</div></div>';
+                        }else{
+                            htmlinput += '<div class="col"><div class="form-check form-check-inline">';
+                            htmlinput +='<input class="form-check-input" type="checkbox" name="permission[]" id="permission'+value.id+'" value="'+value.name+'"><label class="form-check-label" for="permission'+value.id+'">'+value.name+'</label>';
+                            htmlinput += '</div></div>';
+                        }
+                    });
+
+                    $('#permission').html(htmlinput);
+
+                }else{
+                    $('#permission').removeClass('row-cols-1 row-cols-md-3 row-cols-lg-6 g-2');
+                    $('#permission').html('<p id="nopermission">No Permission found for selected guard.</p>');
+                }
+            }
+        });        
+    });
+</script>
 
 @endsection

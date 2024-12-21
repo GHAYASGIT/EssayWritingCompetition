@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    <div class="card-body mx-auto w-50">
+    <div class="card-body">
         <form method="POST" action="{{ route('admin.permission.store') }}">
             @csrf
             <div class="mb-3">

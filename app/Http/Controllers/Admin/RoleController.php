@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 
 class RoleController extends Controller
 {
@@ -24,9 +25,8 @@ class RoleController extends Controller
      */
     public function create(): View
     {
-        $permissions = Permission::orderBy('name', 'ASC')->get();
         $guards = array_keys(config('auth.guards'));
-        return view('admin.role-permission.roles.create', compact('permissions', 'guards'));
+        return view('admin.role-permission.roles.create', compact('guards'));
     }
 
     /**
@@ -66,9 +66,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::orderBy('name', 'ASC')->get();
-        $guards = array_keys(config('auth.guards'));
-        return view('admin.role-permission.roles.edit', compact('role','permissions','guards'));
+        return view('admin.role-permission.roles.edit', compact('role'));
     }
 
     /**
@@ -103,5 +101,22 @@ class RoleController extends Controller
         $role->delete();
 
         return redirect('admin/role')->with('success','Role Deleted.');
+    }
+
+    public function getpermissions(Request $request)
+    {
+        $request->validate([
+            'guard' => 'required|string|max:5'
+        ]);
+
+        if($request->role_id){
+            $role = Role::find($request->role_id);
+            $role_permission = $role->permissions->pluck('name')->toArray();
+            $permission = Permission::select('id','name')->where('guard_name', $request->guard)->orderBy('name', 'ASC')->get();
+            return Response::json(['data'=> $permission, 'role_permission' => $role_permission], '200');
+        }else{
+            $permission = Permission::select('id','name')->where('guard_name', $request->guard)->orderBy('name', 'ASC')->get();
+            return Response::json(['data'=> $permission], '200');    
+        }
     }
 }

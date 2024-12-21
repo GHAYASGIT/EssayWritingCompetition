@@ -47,8 +47,8 @@
                     </table>
                 </div>
                 <div class="card-body d-flex justify-content-around">
-                    <a href="{{ route('event.show', ['id'=>$oevents->id]) }}" class="card-link">View Details</a>
-                    <a href="javascript:void(0)" class="card-link">Enroll Now</a>
+                    <a href="{{ route('event.show', ['id'=>$oevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
+                    <a href="javascript:void(0)" class="card-link">{{ __('Enroll Now') }}</a>
                 </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
                     </table>
                 </div>
                 <div class="card-body d-flex justify-content-around">
-                    <a href="javascript:void(0)" class="card-link">View Details</a>
-                    <a href="javascript:void(0)" class="card-link">Enroll Now</a>
+                    <a href="{{ route('event.show', ['id'=>$upevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
+                    <a href="javascript:void(0)" class="card-link">{{ __('Enroll Now') }}</a>
                 </div>
             </div>
         </div>

@@ -69,7 +69,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::select('name')->orderBy('name', 'ASC')->get();
+        $roles = Role::select('name')->where('guard_name', '=', 'web')->orderBy('name', 'ASC')->get();
         return view('admin.user.edit', compact('user','roles'));
     }
 

@@ -9,7 +9,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
         <h5 class="card-header">{{ __('Users') }}</h5>
-        <a href="{{ route('admin.user.create') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.adminuser.create') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create User
         </a>
     </div>
@@ -43,9 +43,9 @@
                             </td>
                             <td>{{ $user->updated_at->format('d-m-Y h:m A') }}</td>
                             <td>
-                                <form action="{{ route('admin.user.destroy',$user->id) }}" method="POST">
+                                <form action="{{ route('admin.adminuser.destroy',$user->id) }}" method="POST">
                                     {{-- <a class="btn rounded-pill btn-icon btn-info" href="{{ route('admin.user.show',$user->id) }}"><span class="tf-icons bx bx-show"></span></a> --}}
-                                    <a class="btn btn-icon btn-outline-success" href="{{ route('admin.user.edit',$user->id) }}"><span class="tf-icons bx bx-edit"></span></a>
+                                    <a class="btn btn-icon btn-outline-success" href="{{ route('admin.adminuser.edit',$user->id) }}"><span class="tf-icons bx bx-edit"></span></a>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-icon btn-outline-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span></button>

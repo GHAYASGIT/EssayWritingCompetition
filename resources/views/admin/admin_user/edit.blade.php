@@ -9,18 +9,18 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Edit User') }}</h5>
-        <a href="{{ route('admin.user.index') }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.adminuser.index') }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; Back
         </a>
     </div>
 
     <div class="card-body m-3">
-        <form method="POST" action="{{ route('admin.user.update', $user->id) }}">
+        <form method="POST" action="{{ route('admin.adminuser.update', $adminuser->id) }}">
             @csrf
             @method('put')
             <div class="mb-3">
                 <label class="form-label" for="name">Name</label>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $user->name) }}" id="name" @required(true) placeholder="Name">
+                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $adminuser->name) }}" id="name" @required(true) placeholder="Name">
                 @error('name')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
@@ -28,7 +28,7 @@
 
             <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
-                <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" id="email" @required(true) placeholder="Enter Email">
+                <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $adminuser->email) }}" id="email" placeholder="Enter Email">
                 @error('email')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
@@ -38,7 +38,7 @@
                 <label for="role" class="form-label">Role</label>
                 <select multiple id="role" name="role[]" class="form-select">
                     @foreach ($roles as $role)
-                        <option {{ $user->roles->pluck('name')->contains($role->name) ? 'selected' : '' }} value="{{ $role->name }}">{{ $role->name }}</option>
+                        <option {{ $adminuser->roles->pluck('name')->contains($role->name) ? 'selected' : '' }} value="{{ $role->name }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
             </div>            
