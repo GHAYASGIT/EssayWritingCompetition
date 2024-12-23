@@ -48,7 +48,7 @@ class EventsController extends Controller
 
         if(isset($request->description)){
             $request->validate([
-                'description' => 'string|max:250'
+                'description' => 'string'
             ]);
 
             $data += ['description' => $request->description];
@@ -116,7 +116,7 @@ class EventsController extends Controller
 
         if(isset($request->description)){
             $request->validate([
-                'description' => 'string|max:250'
+                'description' => 'string'
             ]);
 
             $data += ['description' => $request->description];

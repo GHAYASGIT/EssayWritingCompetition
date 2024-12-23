@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Models\Booking;
+use App\Models\Events;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -29,7 +32,21 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        //
+        try{
+            $event = Events::findOrFail($request->event_id);
+            if($event->status == 'inactive'){
+                return back()->with('info', "Sorry! Enrollment for this event : $event->name, is closed.");
+            }
+            $booking = Booking::create([
+                'booking_no'    => $this->generateBookingNo(),
+                'user_id'       => Auth::user()->id,
+                'event_id'      => $request->event_id,
+            ]);
+            
+            return back()->with('success', 'Booking is created with id : '.$booking->booking_no);
+        }catch(ModelNotFoundException $e){
+            return back()->with('error', 'Somthing went wrong. Please contact to website support.');
+        }
     }
 
     /**
@@ -63,4 +80,17 @@ class BookingController extends Controller
     {
         //
     }
+
+    public function generateBookingNo()
+    {
+        $bookingObj = Booking::select('booking_no')->latest('id')->first();
+        if ($bookingObj) {
+            $bookingNr = $bookingObj->booking_no;
+            $removed1char = substr($bookingNr, 1);
+            $generateBooking_nr = '#' . str_pad($removed1char + 1, 8, "0", STR_PAD_LEFT);
+        } else {
+            $generateBooking_nr = '#' . str_pad(1, 8, "0", STR_PAD_LEFT);
+        }
+        return $generateBooking_nr;
+    }    
 }

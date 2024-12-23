@@ -4,7 +4,26 @@
 
 @section('content')
 
-
+<!-- Modal -->
+<div class="modal loginmodel fade" id="modalCenter" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">{{ _('Login') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row border-bottom border-top text-center text-uppercase pt-3 mb-3"><p>{{ __('Please login to enroll') }}</p></div>
+                <div class="row">
+                    <a class="btn btn-primary" href="{{ route('login') }}">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">{{ __('Login Now') }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="divider my-5">
@@ -51,9 +70,17 @@
                         <hr class="m-0">
                     </dl>
 
-                    {{ __('Members are joining fast') }}
-                    <a href="#" class="btn-link p-0">{{ __('enroll now') }}</a>
-                    {{ __('to start event.') }}
+                    @auth
+                        <form action="{{ route('booking.store') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="event_id" value="{{ $event->id }}">
+                            {{ __('Members are joining fast ') }}<button type="submit" class="btn btn-link p-0">{{ __('enroll now') }}</button>{{ __(' to start event.') }}
+                        </form>
+                    @endauth
+                    @guest
+                    {{ __('Members are joining fast ') }}<a href="javascript:void(0)" class="btn btn-link p-0 oevents_enroll_now">{{ __('enroll now') }}</a>{{ __(' to start event.') }}
+                    @endguest
+                    
                 </div>
             </div>
         </div>
@@ -102,6 +129,25 @@
     </div>
 
 </div>
+@endsection
 
-
+@section('script')
+    <script type="text/javascript">
+        $('.oevents_enroll_now').click(function (e) { 
+            e.preventDefault();
+            $.ajax({
+                url: '/check-auth',
+                method: 'GET',
+                success: function(response) {
+                    if (!response.authenticated) {
+                        const modal = new bootstrap.Modal($('.loginmodel'));
+                        modal.show();
+                    }
+                },
+                error: function() {
+                    console.log("Error checking authentication");
+                }
+            });
+        });
+    </script>
 @endsection

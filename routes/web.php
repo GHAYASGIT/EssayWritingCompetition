@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController as UserProfileController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -11,6 +13,12 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index']);
 Route::resource('home', HomeController::class);
 Route::get('/event/show/{id}', [HomeController::class, 'show'])->name('event.show');
+
+Route::get('/check-auth', function () {
+    return response()->json(['authenticated' => Auth::check()]);
+});
+
+Route::resource('booking', BookingController::class);
 
 Route::get('/home', function () {
     // return view('dashboard');

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\EventsController;
 
@@ -70,7 +71,8 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
         'user'          => UserController::class,
         'profile'       => ProfileController::class,
         'categories'    => CategoriesController::class,
-        'events'        => EventsController::class
+        'events'        => EventsController::class,
+        'booking'       => BookingController::class
     ]);
 
     Route::post('getpermission', [RoleController::class, 'getpermissions'])->name('getpermission');

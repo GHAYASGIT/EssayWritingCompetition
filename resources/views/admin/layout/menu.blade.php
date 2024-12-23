@@ -64,7 +64,7 @@
         <li class="menu-item @if(in_array(Request::segment(2), ['categories','events'])) open active @endif">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="User Management">{{ __('Event Management') }}</div>
+                <div data-i18n="Event Management">{{ __('Event Management') }}</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item @if(Request::segment(2) == 'categories') active @endif">
@@ -74,10 +74,27 @@
                 </li>
                 <li class="menu-item @if(Request::segment(2) == 'events') active @endif">
                     <a href="{{ route('admin.events.index') }}" class="menu-link">
-                        <div data-i18n="events">{{ __('Events') }}</div>
+                        <div data-i18n="Events">{{ __('Events') }}</div>
                     </a>
                 </li>
             </ul>
-        </li>        
+        </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">{{ __('Enrolments') }}</span>
+        </li>
+        <li class="menu-item @if(in_array(Request::segment(2), ['booking'])) open active @endif">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Enrolment Management">{{ __('Enrolment Management') }}</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item @if(Request::segment(2) == 'booking') active @endif">
+                    <a href="{{ route('admin.booking.index') }}" class="menu-link">
+                        <div data-i18n="Enrolments">{{ __('Enrolments') }}</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
   </aside>
