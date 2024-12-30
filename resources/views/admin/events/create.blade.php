@@ -49,7 +49,7 @@
 
             <div class="mb-3">
                 <label for="started_at" class="form-label">Start Date Time</label>
-                <input class="form-control @error('started_at') is-invalid @enderror" type="datetime-local" name="started_at" value="{{ old('started_at') }}" id="started_at"/>
+                <input class="form-control @error('started_at') is-invalid @enderror" min="{{ now()->subMonths(5)->format('Y-m-d\TH:i') }}" max="{{ now()->addMonths(5)->format('Y-m-d\TH:i') }}" type="datetime-local" name="started_at" value="{{ old('started_at') }}" id="started_at"/>
                 @error('started_at')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
@@ -57,7 +57,7 @@
 
             <div class="mb-3">
                 <label for="end_at" class="form-label">End Date Time</label>
-                <input class="form-control @error('end_at') is-invalid @enderror" type="datetime-local" name="end_at" value="{{ old('end_at') }}" id="end_at"/>
+                <input class="form-control @error('end_at') is-invalid @enderror" min="{{ now()->subMonths(5)->format('Y-m-d\TH:i') }}" max="{{ now()->addMonths(5)->format('Y-m-d\TH:i') }}" type="datetime-local" name="end_at" value="{{ old('end_at') }}" id="end_at"/>
                 @error('end_at')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror

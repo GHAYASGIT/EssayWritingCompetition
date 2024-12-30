@@ -68,7 +68,7 @@
                                 @if (session('success'))
                                     <div class="bs-toast toast fade show bg-success floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
                                         <div class="toast-header">
-                                            <i class="bx bx-bell me-2"></i>
+                                            <i class="bx bx-check-circle me-2"></i>
                                             <div class="me-auto fw-semibold">{{ __('Well done!') }}</div>
                                             {{-- <small>11 mins ago</small> --}}
                                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -82,7 +82,7 @@
                                 @if (session('error'))
                                     <div class="bs-toast toast fade show bg-danger floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
                                         <div class="toast-header">
-                                            <i class="bx bx-bell me-2"></i>
+                                            <i class="bx bx-x-circle me-2"></i>
                                             <div class="me-auto fw-semibold">{{ __('Oh No!') }}</div>
                                             {{-- <small>11 mins ago</small> --}}
                                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -97,7 +97,7 @@
                                     <div class="bs-toast toast fade show bg-info floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
                                         <div class="toast-header">
                                             <i class="bx bx-bell me-2"></i>
-                                            <div class="me-auto fw-semibold">{{ __('Oh No!') }}</div>
+                                            <div class="me-auto fw-semibold">{{ __('Hey There!') }}</div>
                                             {{-- <small>11 mins ago</small> --}}
                                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                         </div>

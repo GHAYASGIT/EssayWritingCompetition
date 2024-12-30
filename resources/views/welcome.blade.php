@@ -33,6 +33,9 @@
 
 <div class="row">
     @forelse ($ongoing_events as $oevents)
+        @if($oevents->end_at <= now()->format('Y-m-d H:i:s'))
+            @continue
+        @endif
         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
             <div class="card">
                 <img class="card-img-top" src="{{ asset('/storage\/'.$oevents->image) }}" height="300px" width="450px" alt="Card image cap">
@@ -66,18 +69,24 @@
                         </table>
                     </div>    
                 </div>
+
                 <div class="card-footer d-flex justify-content-around pt-0">
                     <a href="{{ route('event.show', ['id'=>$oevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
-                    @auth
-                        <form action="{{ route('booking.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="event_id" value="{{ $oevents->id }}">
-                            <button type="submit" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
-                        </form>
-                    @endauth
-                    @guest
-                        <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Enroll Now') }}</a>
-                    @endguest
+                        @auth
+                            @if($oevents->getUserBookingByEventId($oevents->id))
+                                {{-- <a href="{{ route('essay.index') }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>                             --}}
+                                <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                            @else
+                                <form action="{{ route('booking.store') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="event_id" value="{{ $oevents->id }}">
+                                    <button type="submit" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
+                                </form>
+                            @endif
+                        @endauth
+                        @guest
+                            <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Enroll Now') }}</a>
+                        @endguest
                 </div>
             </div>
         </div>
@@ -129,7 +138,62 @@
                 </div>
                 <div class="card-footer d-flex justify-content-around pt-0">
                     <a href="{{ route('event.show', ['id'=>$upevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
-                    <a href="javascript:void(0)" class="card-link">{{ __('Enroll Now') }}</a>
+                        @section('script')
+                            <script type="text/javascript">
+                                startCountdown("{{ $upevents->started_at }}");
+                                function startCountdown(givenDate) {
+                                    if (!givenDate) return;
+
+                                    const targetDate = new Date(givenDate); // Parse the date string into a Date object
+                                    const now = new Date();
+
+                                    if (targetDate > now) {
+                                        $("#timer").show();
+
+                                        function updateTimer() {
+                                            const currentTime = new Date();
+                                            const timeDifference = targetDate - currentTime;
+
+                                            if (timeDifference <= 0) {
+                                                $("#timer").hide();
+                                                $('#start-now').removeClass('d-none');
+                                                $('#enroll-now').removeClass('d-none');
+                                                clearInterval(timerInterval);
+                                            } else {
+                                                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                                                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                                                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+                                                // $("#timer").text(`${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`);
+                                                const formatDoubleDigit = (value) => value.toString().padStart(2, "0");
+
+                                                $("#timer").text(`${formatDoubleDigit(days)} : ${formatDoubleDigit(hours)} : ${formatDoubleDigit(minutes)} : ${formatDoubleDigit(seconds)}`);
+                                            }
+                                        }
+
+                                        updateTimer(); // Initial call
+                                        const timerInterval = setInterval(updateTimer, 1000);
+                                    }
+                                }
+                            </script>
+                        @endsection
+                    @auth
+                        @if($upevents->getUserBookingByEventId($upevents->id))
+                            <div id="timer" style="display: none"></div>
+                            {{-- <a href="{{ route('essay.index') }}" id="start-now" class="card-link oevents_enroll_now d-none">{{ __('Start Now') }}</a> --}}
+                            <a href="javascript:void(0)" id="start-now" class="card-link oevents_enroll_now d-none">{{ __('Start Now') }}</a>
+                        @else
+                            <form action="{{ route('booking.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="event_id" value="{{ $upevents->id }}">
+                                <button type="submit" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
+                            </form>
+                        @endif
+                    @endauth
+                    @guest
+                        <div id="timer" style="display: none"></div>
+                        <a href="javascript:void(0)" id="enroll-now" class="card-link oevents_enroll_now d-none">{{ __('Enroll Now') }}</a>
+                    @endguest
                 </div>
             </div>
         </div>

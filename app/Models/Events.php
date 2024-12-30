@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class Events extends Model
 {
@@ -36,5 +39,33 @@ class Events extends Model
 
     public function category() : object {
         return $this->belongsTo(Categories::class);
+    }
+
+    public function booking() : object {
+        return $this->hasMany(Booking::class, 'event_id', 'id');
+    }
+
+    /**
+     * get the events booking for the specific user
+     *
+     *
+     * @param int $event_id
+     * @return object|null
+     **/
+    public function getUserBookingByEventId(int $event_id = null)
+    {
+        if(Auth::check()){
+            if(empty($event_id)){
+                return 0;
+            }else{
+                try{
+                    return Booking::where('user_id', Auth::user()->id)->where('event_id', $event_id)->firstOrFail();
+                }catch(ModelNotFoundException $e){
+                    return 0;
+                }
+            }
+        }else{
+            return 0;
+        }
     }
 }

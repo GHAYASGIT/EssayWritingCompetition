@@ -37,11 +37,14 @@ class EventsController extends Controller
     {
         $data = [];
 
+        $past_date = now()->subMonths(5);
+        $future_date = now()->addMonths(5);
+
         $request->validate([
             'name'          => 'required|string|max:50',
             'category_id'   => 'required|exists:categories,id',
-            'started_at'    => 'required|date',
-            'end_at'        => 'required|date|after:started_at',
+            'started_at'    => 'required|date|date_format:Y-m-d\TH:i|after_or_equal:'.$past_date,
+            'end_at'        => 'required|date|date_format:Y-m-d\TH:i|after:started_at|before_or_equal:'.$future_date,
             'status'        => 'required|string|in:active,inactive',
             'subscribers'    => 'required|integer|min:0'
         ]);
@@ -105,11 +108,14 @@ class EventsController extends Controller
     {
         $data = [];
 
+        $past_date = now()->subMonths(5);
+        $future_date = now()->addMonths(5);
+
         $request->validate([
             'name'          => 'required|string|max:50',
             'category_id'   => 'required|exists:categories,id',
-            'started_at'    => 'required|date',
-            'end_at'        => 'required|date|after:started_at',
+            'started_at'    => 'required|date|date_format:Y-m-d\TH:i|after_or_equal:'.$past_date,
+            'end_at'        => 'required|date|date_format:Y-m-d\TH:i|after:started_at|before_or_equal:'.$future_date,
             'status'        => 'required|string|in:active,inactive',
             'subscribers'    => 'required|integer|min:0'
         ]);
@@ -153,7 +159,7 @@ class EventsController extends Controller
 
         $event->update($data);
 
-        return redirect('admin/events')->with('success', 'Event Created.');
+        return redirect('admin/events')->with('success', 'Event Updated.');
     }
 
     /**
