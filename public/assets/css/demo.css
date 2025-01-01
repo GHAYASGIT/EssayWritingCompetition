@@ -111,3 +111,7 @@
   top: 5rem;
   right: 20px;  
 }
+
+.profile .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+  border-left: 3px solid black !important;
+}

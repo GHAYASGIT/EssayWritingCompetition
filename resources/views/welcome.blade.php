@@ -51,11 +51,11 @@
                                 </tr> --}}
                                 <tr class="text-uppercase">
                                     <td>{{ __('Event Started At') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($oevents->started_at)->format('d-m-Y h:m A') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($oevents->started_at)->format('d-m-Y h:i A') }}</td>
                                 </tr>
                                 <tr class="text-uppercase">
                                     <td>{{ __('Event end at') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($oevents->end_at)->format('d-m-Y h:m A') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($oevents->end_at)->format('d-m-Y h:i A') }}</td>
                                 </tr>
                                 {{-- <tr class="text-uppercase">
                                     <td>{{ __('Subscribers') }}</td>
@@ -72,21 +72,29 @@
 
                 <div class="card-footer d-flex justify-content-around pt-0">
                     <a href="{{ route('event.show', ['id'=>$oevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
-                        @auth
-                            @if($oevents->getUserBookingByEventId($oevents->id))
-                                {{-- <a href="{{ route('essay.index') }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>                             --}}
-                                <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                    @auth
+                        @if($oevents->getUserBookingByEventId($oevents->id))
+                            @if ($is_drafted = $oevents->essayIsDrafted($oevents->id))
+                                @if ($is_drafted->is_drafted)
+                                    <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>
+                                @endif
+                                @if ($is_drafted->is_submitted)
+                                    <span class="card-link oevents_enroll_now">{{ __('Essay Submitted') }}</span>
+                                @endif
                             @else
-                                <form action="{{ route('booking.store') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="event_id" value="{{ $oevents->id }}">
-                                    <button type="submit" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
-                                </form>
+                                <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
                             @endif
-                        @endauth
-                        @guest
-                            <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Enroll Now') }}</a>
-                        @endguest
+                        @else
+                            <form action="{{ route('booking.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="event_id" value="{{ $oevents->id }}">
+                                <button type="submit" onclick="return confirm('Are you sure?');" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
+                            </form>
+                        @endif
+                    @endauth
+                    @guest
+                        <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Enroll Now') }}</a>
+                    @endguest
                 </div>
             </div>
         </div>
@@ -118,11 +126,11 @@
                                 </tr> --}}
                                 <tr class="text-uppercase">
                                     <td>{{ __('Event Started At') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($upevents->started_at)->format('d-m-Y h:m A') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($upevents->started_at)->format('d-m-Y h:i A') }}</td>
                                 </tr>
                                 <tr class="text-uppercase">
                                     <td>{{ __('Event end at') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($upevents->end_at)->format('d-m-Y h:m A') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($upevents->end_at)->format('d-m-Y h:i A') }}</td>
                                 </tr>
                                 {{-- <tr class="text-uppercase">
                                     <td>{{ __('Subscribers') }}</td>
@@ -167,7 +175,7 @@
                                                 // $("#timer").text(`${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`);
                                                 const formatDoubleDigit = (value) => value.toString().padStart(2, "0");
 
-                                                $("#timer").text(`${formatDoubleDigit(days)} : ${formatDoubleDigit(hours)} : ${formatDoubleDigit(minutes)} : ${formatDoubleDigit(seconds)}`);
+                                                $("#timer").text(`${formatDoubleDigit(days)} D : ${formatDoubleDigit(hours)} H : ${formatDoubleDigit(minutes)} M : ${formatDoubleDigit(seconds)} S`);
                                             }
                                         }
 
@@ -186,7 +194,7 @@
                             <form action="{{ route('booking.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="event_id" value="{{ $upevents->id }}">
-                                <button type="submit" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
+                                <button type="submit" onclick="return confirm('Are you sure?');" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
                             </form>
                         @endif
                     @endauth
@@ -206,7 +214,7 @@
 @section('script')
     <script type="text/javascript">
         $('.oevents_enroll_now').click(function (e) { 
-            e.preventDefault();
+
             $.ajax({
                 url: '/check-auth',
                 method: 'GET',

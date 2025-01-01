@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EssayController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController as UserProfileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,16 +19,16 @@ Route::get('/check-auth', function () {
     return response()->json(['authenticated' => Auth::check()]);
 });
 
-Route::resource('booking', BookingController::class);
-
-Route::get('/home', function () {
-    // return view('dashboard');
-    return 'Verma';
-})->middleware(['auth', 'verified'])->name('home');
+// Route::get('/home', function () {
+//     // return view('dashboard');
+//     return 'Verma';
+// })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::resources([
-        'profile'       => UserProfileController::class,
+        'profile'   => ProfileController::class,
+        'booking'   => BookingController::class,
+        'essay'     => EssayController::class
     ]);
 });
 

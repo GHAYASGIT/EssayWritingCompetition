@@ -49,9 +49,9 @@
                             @endswitch
                         </td>
                         <td>{{ $event->user->name }} ({{ $event->user->getRoleNames()->implode(' | ') }})</td>
-                        <td>{{ \Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:m A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:m A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($event->created_at)->format('d-m-Y h:m A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:i A') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($event->created_at)->format('d-m-Y h:i A') }}</td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-outline-info dropdown-toggle p-2" data-bs-toggle="dropdown" aria-expanded="false">

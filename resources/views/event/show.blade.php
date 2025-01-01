@@ -71,11 +71,24 @@
                     </dl>
 
                     @auth
-                        <form action="{{ route('booking.store') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="event_id" value="{{ $event->id }}">
-                            {{ __('Members are joining fast ') }}<button type="submit" class="btn btn-link p-0">{{ __('enroll now') }}</button>{{ __(' to start event.') }}
-                        </form>
+                        @if($event->getUserBookingByEventId($event->id))
+                            @if ($is_drafted = $event->essayIsDrafted($event->id))
+                                @if ($is_drafted->is_drafted)
+                                    {{ __("Your $event->name, is in draft. ") }}<a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
+                                @endif
+                                @if ($is_drafted->is_submitted)
+                                    <span class="card-link oevents_enroll_now">{{ __("Your $event->name, has been submitted.") }}</span>
+                                @endif
+                            @else
+                                <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                            @endif
+                        @else
+                            <form action="{{ route('booking.store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                {{ __('Members are joining fast ') }}<button type="submit" class="btn btn-link p-0">{{ __('enroll now') }}</button>{{ __(' to start event.') }}
+                            </form>
+                        @endif
                     @endauth
                     @guest
                     {{ __('Members are joining fast ') }}<a href="javascript:void(0)" class="btn btn-link p-0 oevents_enroll_now">{{ __('enroll now') }}</a>{{ __(' to start event.') }}
@@ -134,7 +147,7 @@
 @section('script')
     <script type="text/javascript">
         $('.oevents_enroll_now').click(function (e) { 
-            e.preventDefault();
+
             $.ajax({
                 url: '/check-auth',
                 method: 'GET',

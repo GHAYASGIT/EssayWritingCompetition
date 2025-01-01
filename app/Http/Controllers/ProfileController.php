@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Profile;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -16,7 +17,8 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $profile = Profile::where('user_id', $user->id)->first();
-        return view('profile.index', compact('user', 'profile'));
+        $bookings = Booking::where('user_id', $user->id)->latest()->paginate(8);
+        return view('profile.index', compact('user', 'profile', 'bookings'))->with('i', (request()->input('page', 1) - 1) * 8);
     }
 
     /**
