@@ -93,12 +93,12 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#Enrolment No</th>
-                                        <th>Event Id</th>
-                                        <th>Event Name</th>
-                                        <th>Event Started at</th>
-                                        <th>Event Ended at</th>
-                                        <th>Enroled at</th>
+                                        <th>{{ __('#Enrolment No') }}</th>
+                                        <th>{{ __('Event Id') }}</th>
+                                        <th>{{ __('Event Name') }}</th>
+                                        <th>{{ __('Event Started at') }}</th>
+                                        <th>{{ __('Event Ended at') }}</th>
+                                        <th>{{ __('Enroled at') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>

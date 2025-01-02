@@ -19,20 +19,6 @@ class HomeController extends Controller
         $ongoing_events = Events::with('booking')->where('started_at', '<=', $currentDatetime)->where('end_at', '>=', $currentDatetime)->where('status','=','active')->get();
         $upcomming_events = Events::with('booking')->where('started_at', '>=', $currentDatetime)->where('status','=','active')->get();
 
-        // echo '<pre>';
-        // foreach($ongoing_events as $event){
-        //     foreach ($event->booking as $booking) {
-        //         print_r($booking->user_id);
-        //     }
-        // }
-
-        // die;
-
-        // if(Auth::check()){
-        //     $upcomming_events = Events::whereHas('booking', fn ($query) => $query->where('user_id', Auth::user()->id))->with('booking')->where('started_at', '>=', $currentDatetime)->where('status','=','active')->get();
-        // }else{
-        // }
-
         return view('welcome', compact('ongoing_events', 'upcomming_events'));
     }
 
