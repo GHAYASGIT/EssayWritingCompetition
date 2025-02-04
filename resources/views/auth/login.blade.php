@@ -1,4 +1,4 @@
-@extends('layout.applogin')
+@extends('app.layoutlogin')
 
 @section('title', 'Login')
 
@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <!-- Logo -->
                         <div class="app-brand justify-content-center">
-                            <a href="index.html" class="app-brand-link gap-2">
+                            <a href="{{ url('/') }}" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
                                     <svg
                                     width="25"

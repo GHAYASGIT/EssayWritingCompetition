@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Events;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -14,8 +16,8 @@ class HomeController extends Controller
     public function index()
     {
         $currentDatetime = Carbon::now();
-        $ongoing_events = Events::where('started_at', '<=', $currentDatetime)->where('end_at', '>=', $currentDatetime)->where('status','=','active')->get();
-        $upcomming_events = Events::where('started_at', '>=', $currentDatetime)->where('status','=','active')->get();
+        $ongoing_events = Events::with('booking')->where('started_at', '<=', $currentDatetime)->where('end_at', '>=', $currentDatetime)->where('status','=','active')->get();
+        $upcomming_events = Events::with('booking')->where('started_at', '>=', $currentDatetime)->where('status','=','active')->get();
 
         return view('welcome', compact('ongoing_events', 'upcomming_events'));
     }
@@ -39,10 +41,10 @@ class HomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
-        $events = Events::find($id);
-        dd($events);        
+        $event = Events::find($id);
+        return view('event.show', compact('event'));
     }
 
     /**

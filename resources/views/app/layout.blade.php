@@ -65,6 +65,48 @@
                             <div class="content-wrapper">
                                 <!-- Content -->
 
+                                @if (session('success'))
+                                    <div class="bs-toast toast fade show bg-success floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
+                                        <div class="toast-header">
+                                            <i class="bx bx-check-circle me-2"></i>
+                                            <div class="me-auto fw-semibold">{{ __('Well done!') }}</div>
+                                            {{-- <small>11 mins ago</small> --}}
+                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                        </div>
+                                        <div class="toast-body">
+                                            {{ __(session('success')) }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (session('error'))
+                                    <div class="bs-toast toast fade show bg-danger floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
+                                        <div class="toast-header">
+                                            <i class="bx bx-x-circle me-2"></i>
+                                            <div class="me-auto fw-semibold">{{ __('Oh No!') }}</div>
+                                            {{-- <small>11 mins ago</small> --}}
+                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                        </div>
+                                        <div class="toast-body">
+                                            {{ __(session('error')) }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (session('info'))
+                                    <div class="bs-toast toast fade show bg-info floating-alert" role="alert" aria-live="assertive" aria-atomic="true">
+                                        <div class="toast-header">
+                                            <i class="bx bx-bell me-2"></i>
+                                            <div class="me-auto fw-semibold">{{ __('Hey There!') }}</div>
+                                            {{-- <small>11 mins ago</small> --}}
+                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                        </div>
+                                        <div class="toast-body">
+                                            {{ __(session('info')) }}
+                                        </div>
+                                    </div>
+                                @endif                                
+
                                 <div class="container-fluid flex-grow-1 container-p-y">
 
                                     @yield('content')
@@ -130,5 +172,13 @@
         <!-- Main JS -->
         <script src="{{ asset('assets/js/main.js') }}"></script>
 
+        @yield('script')
+
+        <script type="text/javascript">
+            setTimeout(() => {
+                $('.floating-alert').removeClass('show');
+                $('.floating-alert').addClass('hide');
+            }, 5000);
+        </script>        
     </body>
 </html>

@@ -1,41 +1,37 @@
 <?php
 
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EssayController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\EventsController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\McqsController;
+use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Route::get('/', [HomeController::class, 'index']);
+Route::resource('home', HomeController::class);
 Route::get('/event/show/{id}', [HomeController::class, 'show'])->name('event.show');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/check-auth', function () {
+    return response()->json(['authenticated' => Auth::check()]);
+});
+
+// Route::get('/home', function () {
+//     // return view('dashboard');
+//     return 'Verma';
+// })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::resources([
-        'permission'    => PermissionController::class, 
-        'role'          => RoleController::class, 
-        'user'          => UserController::class,
-        'profile'       => ProfileController::class,
-        'categories'    => CategoriesController::class,
-        'events'        => EventsController::class
+        'profile'   => ProfileController::class,
+        'booking'   => BookingController::class,
+        'essay'     => EssayController::class,
+        'mcqs'      => McqsController::class
     ]);
-
-    Route::get('events/active/{id}', [EventsController::class, 'active'])->name('events.active');
-    Route::get('events/inactive/{id}', [EventsController::class, 'inactive'])->name('events.inactive');
-
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::fallback(function(){
@@ -43,3 +39,4 @@ Route::fallback(function(){
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/admin-auth.php';

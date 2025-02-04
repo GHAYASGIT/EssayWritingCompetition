@@ -13,6 +13,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    protected $guard = 'web';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -46,4 +48,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function profile(){
+        return $this->hasOne(Profile::class);
+    }
+
+    protected function getDefaultGuardName(): string { return $this->guard; }
 }

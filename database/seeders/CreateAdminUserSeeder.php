@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -31,21 +31,21 @@ class CreateAdminUserSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['guard_name' => 'admin', 'name' => $permission]);
         }
 
-        $super_admin_role = Role::create(['name' => 'super-admin']);
-        $admin_role = Role::create(['name' => 'admin']);
+        $super_admin_role = Role::create(['guard_name' => 'admin', 'name' => 'super-admin']);
+        $admin_role = Role::create(['guard_name' => 'admin', 'name' => 'admin']);
         $admin_role->syncPermissions(['profile-create','profile-read','profile-update','profile-delete']);
 
-        $super_admin_user = User::create([
+        $super_admin_user = Admin::create([
             'name' => 'Super Admin', 
             'email' => 'superadmin@admin.com',
             'password' => bcrypt('Admin@123')
         ]);
         $super_admin_user->assignRole([$super_admin_role->id]);
 
-        $admin_user = User::create([
+        $admin_user = Admin::create([
             'name' => 'Pankaj Kumar', 
             'email' => 'admin@gmail.com',
             'password' => bcrypt('Pankaj@123')
