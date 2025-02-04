@@ -18,13 +18,25 @@
         <form method="POST" action="{{ route('admin.categories.update', $category->id) }}">
             @csrf
             @method('put')
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label class="form-label" for="name">Category Name</label>
                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $category->name) }}" id="name" placeholder="Category Name">
                 @error('name')
                     <p class="invalid-feedback"> {{ $message }} </p>
                 @enderror
-            </div>
+            </div> --}}
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Choose Category</label>
+                <select id="name" name="name" class="form-select @error('name') is-invalid @enderror">
+                    <option value="">{{ __('---Select Category---') }}</option>
+                    <option value="Essay" @selected(old('name',$category->name) == 'Essay')>{{ __('Essay') }}</option>
+                    <option value="MCQs" @selected(old('name',$category->name) == 'MCQs')>{{ __('MCQs') }}</option>
+                </select>
+                @error('name')
+                    <p class="invalid-feedback"> {{ $message }} </p>
+                @enderror
+            </div>            
 
             <div class="mb-3">
                 <label class="form-lable d-block">Category Status</label>

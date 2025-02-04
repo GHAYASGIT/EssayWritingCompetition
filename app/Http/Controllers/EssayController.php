@@ -30,7 +30,7 @@ class EssayController extends Controller
                 return back()->with('info', 'Event is closed now.');
             }
             $booking = $event->getUserBookingByEventId($request->id);
-            $essay = $event->essayIsDrafted($request->id);
+            $essay = $event->eventIsDrafted($request->id, $event->category_id);
             if($booking){
                 if($essay){
                     return view('essay.create', compact('event', 'essay'));

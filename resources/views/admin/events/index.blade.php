@@ -70,6 +70,14 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
+                                    @if ($event->category->name == 'MCQs')
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center text-primary" href="{{ route('admin.questionoptions.create') }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Create Questions</span></a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                    @endif
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center text-danger" href="{{ route('admin.events.inactive',$event->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3 text-upercase">Inactive</span></a>
                                     </li>

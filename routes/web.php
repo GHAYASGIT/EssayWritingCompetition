@@ -5,6 +5,7 @@ use App\Http\Controllers\EssayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\McqsController;
 use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
@@ -28,7 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'profile'   => ProfileController::class,
         'booking'   => BookingController::class,
-        'essay'     => EssayController::class
+        'essay'     => EssayController::class,
+        'mcqs'      => McqsController::class
     ]);
 });
 

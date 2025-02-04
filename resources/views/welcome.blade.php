@@ -94,15 +94,30 @@
                     <a href="{{ route('event.show', ['id'=>$oevents->id]) }}" class="card-link">{{ __('View Details') }}</a>
                     @auth
                         @if($oevents->getUserBookingByEventId($oevents->id))
-                            @if ($is_drafted = $oevents->essayIsDrafted($oevents->id))
+                            @php
+                                switch ($oevents->category_id) {
+                                    case '1':
+                                        $route_create = 'essay.create';
+                                        break;
+                                    case '2':
+                                        $route_create = 'mcqs.create';
+                                        break;
+                                    
+                                    default:
+                                        $route_create = null;
+                                        break;
+                                }
+                            @endphp
+
+                            @if ($is_drafted = $oevents->eventIsDrafted($oevents->id, $oevents->category_id))
                                 @if ($is_drafted->is_drafted)
-                                    <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>
+                                    <a href="{{ route($route_create, ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>
                                 @endif
                                 @if ($is_drafted->is_submitted)
                                     <span class="card-link oevents_enroll_now">{{ __('Essay Submitted') }}</span>
                                 @endif
                             @else
-                                <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                                <a href="{{ route($route_create, ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
                             @endif
                         @else
                             <form action="{{ route('booking.store') }}" method="post">
@@ -119,7 +134,9 @@
             </div>
         </div>
     @empty
-        <p>{{ __('There is no events available.') }}</p>
+        <div class="row text-center bg-white text-uppercase py-3 ms-1">
+            <span>{{ __('There is no events available') }}</span>
+        </div>
     @endforelse
 </div>
 
@@ -226,7 +243,9 @@
             </div>
         </div>
     @empty
-        <p>{{ __('There is no events available.') }}</p>
+        <div class="row text-center bg-white text-uppercase py-3 ms-1">
+            <span>{{ __('There is no events available') }}</span>
+        </div>
     @endforelse
 </div>
 @endsection

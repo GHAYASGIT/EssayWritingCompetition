@@ -74,7 +74,7 @@
                                 {{ __('Event will start soon!') }}
                             @else
                                 @if($event->getUserBookingByEventId($event->id))
-                                    @if ($is_drafted = $event->essayIsDrafted($event->id))
+                                    @if ($is_drafted = $event->eventIsDrafted($event->id, $event->category_id))
                                         @if ($is_drafted->is_drafted)
                                             {{ __("$event->name, is in draft. ") }}<a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
                                         @endif

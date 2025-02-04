@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\EventsController;
-
+use App\Http\Controllers\QuestionOptionsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -65,14 +65,15 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::resources([
-        'permission'    => PermissionController::class, 
-        'role'          => RoleController::class,
-        'adminuser'     => AdminUserController::class,
-        'user'          => UserController::class,
-        'profile'       => ProfileController::class,
-        'categories'    => CategoriesController::class,
-        'events'        => EventsController::class,
-        'booking'       => BookingController::class
+        'permission'        => PermissionController::class, 
+        'role'              => RoleController::class,
+        'adminuser'         => AdminUserController::class,
+        'user'              => UserController::class,
+        'profile'           => ProfileController::class,
+        'categories'        => CategoriesController::class,
+        'events'            => EventsController::class,
+        'booking'           => BookingController::class,
+        'questionoptions'   => QuestionOptionsController::class
     ]);
 
     Route::post('getpermission', [RoleController::class, 'getpermissions'])->name('getpermission');
