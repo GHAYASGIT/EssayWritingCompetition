@@ -2,6 +2,26 @@
 
 @section('title', 'Welcome')
 
+@section('script')
+    <script type="text/javascript">
+        $('#enroll_now').click(function (e) {
+            $.ajax({
+                url: '/check-auth',
+                method: 'GET',
+                success: function(response) {
+                    if (!response.authenticated) {
+                        const modal = new bootstrap.Modal($('.loginmodel'));
+                        modal.show();
+                    }
+                },
+                error: function() {
+                    console.log("Error checking authentication");
+                }
+            });
+        });
+    </script>
+@endsection
+
 @section('content')
 
 <!-- Modal -->
@@ -88,12 +108,12 @@
                             <form action="{{ route('booking.store') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="event_id" value="{{ $oevents->id }}">
-                                <button type="submit" onclick="return confirm('Are you sure?');" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
+                                <button type="submit" id="enroll_now" onclick="return confirm('Are you sure?');" class="btn btn-link p-0">{{ __('Enroll Now') }}</button>
                             </form>
                         @endif
                     @endauth
                     @guest
-                        <a href="javascript:void(0)" class="card-link oevents_enroll_now">{{ __('Enroll Now') }}</a>
+                        <button type="button" id="enroll_now" class="btn btn-link p-0 card-link">{{ __('Enroll Now') }}</button>
                     @endguest
                 </div>
             </div>
@@ -200,7 +220,7 @@
                     @endauth
                     @guest
                         <div id="timer" style="display: none"></div>
-                        <a href="javascript:void(0)" id="enroll-now" class="card-link oevents_enroll_now d-none">{{ __('Enroll Now') }}</a>
+                        <button type="button" id="enroll_now" class="btn btn-link p-0 card-link">{{ __('Enroll Now') }}</button>
                     @endguest
                 </div>
             </div>
@@ -209,25 +229,4 @@
         <p>{{ __('There is no events available.') }}</p>
     @endforelse
 </div>
-@endsection
-
-@section('script')
-    <script type="text/javascript">
-        $('.oevents_enroll_now').click(function (e) { 
-
-            $.ajax({
-                url: '/check-auth',
-                method: 'GET',
-                success: function(response) {
-                    if (!response.authenticated) {
-                        const modal = new bootstrap.Modal($('.loginmodel'));
-                        modal.show();
-                    }
-                },
-                error: function() {
-                    console.log("Error checking authentication");
-                }
-            });
-        });
-    </script>
 @endsection

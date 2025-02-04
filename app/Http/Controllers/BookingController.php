@@ -33,8 +33,14 @@ class BookingController extends Controller
     public function store(StoreBookingRequest $request)
     {
         try{
+            $booking_count = Booking::where('event_id', $request->event_id)->count();
             $event = Events::findOrFail($request->event_id);
+            if($booking_count == $event->subscribers){
+                return back()->with('info', "Sorry! Enrollment for this event : $event->name, is closed.");
+            }
+            
             $is_booking = Booking::where('user_id', Auth::user()->id)->where('event_id', $request->event_id)->exists();
+
             if($is_booking){
                 return back()->with('info', "You have already inrolled on this event : $event->name");
             }

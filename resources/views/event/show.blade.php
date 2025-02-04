@@ -43,51 +43,55 @@
                     <dl class="row">
                         <h1>{{ __($event->name) }}</h1>
                         <hr>
-
-                        <dt class="col-sm-4 text-uppercase">{{ __('Category') }}</dt>
-                        <dd class="col-sm-8">{{ __($event->category->name) }}</dd>
-
+                        <dt class="col-sm-5 text-uppercase">{{ __('Category') }}</dt>
+                        <dd class="col-sm-7">{{ __($event->category->name) }}</dd>
                         <hr>
-
-                        <dt class="col-sm-4 text-uppercase">{{ __('Status') }}</dt>
-                        <dd class="col-sm-8">{{ __($event->status) }}</dd>
-
+                        <dt class="col-sm-5 text-uppercase">{{ __('Status') }}</dt>
+                        <dd class="col-sm-7">{{ __($event->status) }}</dd>
+                        <hr>            
+                        <dt class="col-sm-5 text-uppercase">{{ __('Start Date & Time') }}</dt>
+                        <dd class="col-sm-7">{{ __(\Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:m A')) }}</dd>
                         <hr>
-            
-                        <dt class="col-sm-4 text-uppercase">{{ __('Start Date & Time') }}</dt>
-                        <dd class="col-sm-8">{{ __(\Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:m A')) }}</dd>
-
+                        <dt class="col-sm-5 text-uppercase">{{ __('End Date & Time') }}</dt>
+                        <dd class="col-sm-7">{{ __(\Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:m A')) }}</dd>
                         <hr>
-
-                        <dt class="col-sm-4 text-uppercase">{{ __('End Date & Time') }}</dt>
-                        <dd class="col-sm-8">{{ __(\Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:m A')) }}</dd>
+                        <dt class="col-sm-5 text-uppercase">{{ __('Total Members') }}</dt>
+                        <dd class="col-sm-7">{{ __($event->subscribers) }}</dd>
                         <hr>
-                        <dt class="col-sm-4 text-uppercase">{{ __('Total Members') }}</dt>
-                        <dd class="col-sm-8">{{ __($event->subscribers) }}</dd>
-                        <hr>
-                        <dt class="col-sm-4 text-uppercase">{{ __('Required Members') }}</dt>
-                        <dd class="col-sm-8">{{ __($event->subscribers) }}</dd>
+                        <dt class="col-sm-5 text-uppercase">{{ __('Already Enrolled Members') }}</dt>
+                        @if($event->booking->count())
+                            <dd class="col-sm-7">{{ __($event->booking->count()) }}</dd>
+                        @endif
                         <hr class="m-0">
                     </dl>
 
                     @auth
-                        @if($event->getUserBookingByEventId($event->id))
-                            @if ($is_drafted = $event->essayIsDrafted($event->id))
-                                @if ($is_drafted->is_drafted)
-                                    {{ __("Your $event->name, is in draft. ") }}<a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
-                                @endif
-                                @if ($is_drafted->is_submitted)
-                                    <span class="card-link oevents_enroll_now">{{ __("Your $event->name, has been submitted.") }}</span>
-                                @endif
-                            @else
-                                <a href="{{ route('essay.create', ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
-                            @endif
+
+                        @if($event->end_at <= now()->format('Y-m-d H:i:s'))
+                            {{ __('You scored : ') }}
                         @else
-                            <form action="{{ route('booking.store') }}" method="post">
-                                @csrf
-                                <input type="hidden" name="event_id" value="{{ $event->id }}">
-                                {{ __('Members are joining fast ') }}<button type="submit" class="btn btn-link p-0">{{ __('enroll now') }}</button>{{ __(' to start event.') }}
-                            </form>
+                            @if($event->started_at >= now()->format('Y-m-d H:i:s'))
+                                {{ __('Event will start soon!') }}
+                            @else
+                                @if($event->getUserBookingByEventId($event->id))
+                                    @if ($is_drafted = $event->essayIsDrafted($event->id))
+                                        @if ($is_drafted->is_drafted)
+                                            {{ __("$event->name, is in draft. ") }}<a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
+                                        @endif
+                                        @if ($is_drafted->is_submitted)
+                                            <span class="card-link oevents_enroll_now">{{ __("$event->name, has been submitted.") }}</span>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                                    @endif
+                                @else
+                                    <form action="{{ route('booking.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        {{ __('Members are joining fast ') }}<button type="submit" class="btn btn-link p-0">{{ __('enroll now') }}</button>{{ __(' to start event.') }}
+                                    </form>
+                                @endif
+                            @endif
                         @endif
                     @endauth
                     @guest
