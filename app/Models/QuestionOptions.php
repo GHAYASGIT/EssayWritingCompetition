@@ -22,5 +22,6 @@ class QuestionOptions extends Model
         'event_id',
         'question',
         'options',
+        'correct_option'
     ];
 }

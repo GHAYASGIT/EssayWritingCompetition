@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->string('question');
             $table->string('options');
+            $table->string('correct_option');
             $table->foreign('event_id')->references('id')->on('events')->cascadeOnUpdate();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

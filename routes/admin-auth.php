@@ -76,6 +76,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
         'questionoptions'   => QuestionOptionsController::class
     ]);
 
+    Route::get('questionoptions/index/{event}',[QuestionOptionsController::class, 'index'])->name('questionoptions.index');
+    Route::get('questionoptions/create/{event}',[QuestionOptionsController::class, 'create'])->name('questionoptions.create');
+
     Route::post('getpermission', [RoleController::class, 'getpermissions'])->name('getpermission');
 
     Route::get('events/active/{id}', [EventsController::class, 'active'])->name('events.active');

@@ -5,6 +5,7 @@
 @section('content')
 
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">UI Elements /</span> Cards Basic</h4>
+@dd($questionOptions->event_id);
 
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
@@ -13,9 +14,8 @@
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; {{__("Back")}}
         </a>
     </div>
-
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.questionoptions.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.questionoptions.update') }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="event_id" value="{{$event_id}}">
             <ul class="list-group list-group-flush">
