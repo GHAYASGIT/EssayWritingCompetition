@@ -9,7 +9,7 @@
 <div class="card">
     <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-3">
         <h5 class="card-header">{{ __('Create questions and options') }}</h5>
-        <a href="{{ route('admin.questionoptions.index', $event_id) }}" class="btn btn-primary border-0 m-3">
+        <a href="{{ route('admin.questionoptions.viewquestion', $event_id) }}" class="btn btn-primary border-0 m-3">
             <span class="tf-icons bx bx-left-arrow-alt"></span>&nbsp; {{__("Back")}}
         </a>
     </div>
@@ -20,13 +20,12 @@
             <input type="hidden" name="event_id" value="{{$event_id}}">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="mb-3">
-                        <label class="form-label" for="question">{{"Enter Question"}}</label>
-                        <input type="text" class="form-control @error('question') is-invalid @enderror" name="question" value="{{ old('question') }}" id="question" placeholder="Enter Question">
-                        @error('question')
-                            <p class="invalid-feedback"> {{ $message }} </p>
-                        @enderror
-                    </div>
+                    <label class="form-label" for="question">{{"Enter Question"}}</label>
+                    <input type="text" class="form-control @error('question') is-invalid @enderror" name="question" value="{{ old('question') }}" id="question" placeholder="Enter Question">
+                    @error('question')
+                        <p class="invalid-feedback"> {{ $message }} </p>
+                    @enderror
+                    
                     <ul class="list-group list-group-flush dynamic-wrap">
                         <li class="list-group-item entry">
                             <label class="form-label" for="option">{{"Enter Options"}}</label>
@@ -42,13 +41,17 @@
                 </li>
             </ul>
 
-            <div class="mb-3">
-                <label class="form-label" for="correct-option">{{"Enter Correct Option Number"}}</label>
-                <input type="number" min="1" class="form-control @error('correct_option') is-invalid @enderror" name="correct_option" value="{{ old('correct_option') }}" id="correct_option" placeholder="Enter Correct Option Number">
-                @error('correct_option')
-                    <p class="invalid-feedback"> {{ $message }} </p>
-                @enderror
-            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="mb-3">
+                        <label class="form-label" for="correct-option">{{"Enter Correct Option Number"}}</label>
+                        <input type="number" min="1" class="form-control @error('correct_option') is-invalid @enderror" name="correct_option" value="{{ old('correct_option') }}" id="correct_option" placeholder="Enter Correct Option Number">
+                        @error('correct_option')
+                            <p class="invalid-feedback"> {{ $message }} </p>
+                        @enderror
+                    </div>
+                </li>
+            </ul>
 
             <div class="mb-3 text-end">
                 <button type="submit" class="btn btn-primary">Submit</button>

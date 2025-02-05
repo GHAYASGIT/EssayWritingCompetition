@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\EventsController;
-use App\Http\Controllers\QuestionOptionsController;
+use App\Http\Controllers\Admin\QuestionOptionsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -76,8 +76,11 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
         'questionoptions'   => QuestionOptionsController::class
     ]);
 
-    Route::get('questionoptions/index/{event}',[QuestionOptionsController::class, 'index'])->name('questionoptions.index');
-    Route::get('questionoptions/create/{event}',[QuestionOptionsController::class, 'create'])->name('questionoptions.create');
+    // Route::get('questionoptions/index/{event}',[QuestionOptionsController::class, 'index'])->name('questionoptions.index');
+    // Route::get('questionoptions/create/{event}',[QuestionOptionsController::class, 'create'])->name('questionoptions.create');
+
+    Route::get('questionoptions/view/{event}',[QuestionOptionsController::class, 'viewQuestion'])->name('questionoptions.viewquestion');
+    Route::get('questionoptions/createquestion/{event}',[QuestionOptionsController::class, 'createQuestion'])->name('questionoptions.createquestion');
 
     Route::post('getpermission', [RoleController::class, 'getpermissions'])->name('getpermission');
 

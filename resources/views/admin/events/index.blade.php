@@ -72,7 +72,7 @@
                                     </li>
                                     @if ($event->category->name == 'MCQs')
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center text-primary" href="{{ route('admin.questionoptions.index', $event->id) }}"><span class="tf-icons bx bx-plus"></span><span class="ms-3 text-upercase">Add Questions</span></a>
+                                            <a class="dropdown-item d-flex align-items-center text-primary" href="{{ route('admin.questionoptions.viewquestion', $event->id) }}"><span class="tf-icons bx bx-plus"></span><span class="ms-3 text-upercase">Add Questions</span></a>
                                         </li>
                                         <li>
                                             <hr class="dropdown-divider">
