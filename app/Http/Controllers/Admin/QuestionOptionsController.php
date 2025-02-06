@@ -113,8 +113,9 @@ class QuestionOptionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(QuestionOptions $questionOptions)
+    public function destroy(QuestionOptions $questionoption)
     {
-        //
+        $questionoption->delete();
+        return back()->with('success', 'Question Deleted');
     }
 }

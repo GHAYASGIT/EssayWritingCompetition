@@ -24,27 +24,29 @@
         <div class="accordion" id="accordionExample">
             @forelse ($question_options as $qo)
                 <div class="card accordion-item mb-3">
-                    <h2 class="accordion-header" id="heading{{$qo->id}}">
+                    <h2 class="accordion-header d-flex" id="heading{{$qo->id}}">
                         <button type="button" class="accordion-button border border-success border-bottom-0 collapsed" data-bs-toggle="collapse" data-bs-target="#accordion{{$qo->id}}" aria-expanded="false" aria-controls="accordion{{$qo->id}}">
                             <span><span>{{"Qus"}} {{++$i}} <i class='tf-icons bx bx-chevron-right'></i></span> {{$qo->question}}</span>
                         </button>
+                        <form action="{{ route('admin.questionoptions.edit', $qo->id) }}">
+                            <button type="submit" class="btn btn-primary mx-2">
+                                <span class="tf-icons bx bx-edit"></span>
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.questionoptions.destroy', $qo->id) }}" method="POST" style="all: unset">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                                <span class="tf-icons bx bx-trash"></span>
+                            </button>
+                        </form>
                     </h2>
 
                     <div id="accordion{{$qo->id}}" class="accordion-collapse border border-success collapse"  aria-labelledby="heading{{$qo->id}}" data-bs-parent="#accordionExample" style="">
                         <div class="accordion-body">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
-                                    <span class="d-flex justify-content-between">
-                                        <span class="text-decoration-underline">{{"Options"}}</span>
-                                        <a href="{{ route('admin.questionoptions.edit', $qo->id) }}" class="text-decoration-underline ms-3">{{__("Edit Question")}}</a>
-
-                                        <form action="{{ route('admin.questionoptions.destroy', $qo->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <a type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></a>
-                                        </form>
-                                    </span>
-
+                                    <span class="text-decoration-underline">{{"Options"}}</span>
                                     <ul class="list-group list-group-flush">
                                         @php
                                             $j = 0;
@@ -67,8 +69,12 @@
             @empty
                 <span>{{ __('No record found!') }}</span>
             @endforelse
-            {!! $question_options->links('pagination::bootstrap-5') !!}
         </div>
+
+    </div>
+
+    <div class="card-footer">
+        {!! $question_options->links('pagination::bootstrap-5') !!}
     </div>
 </div>
 
