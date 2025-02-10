@@ -24,4 +24,8 @@ class QuestionOptions extends Model
         'options',
         'correct_option'
     ];
+
+    public function getByEventId($event_id){
+        return QuestionOptions::where('event_id', $event_id)->get();
+    }
 }

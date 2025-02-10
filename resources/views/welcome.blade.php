@@ -95,11 +95,11 @@
                     @auth
                         @if($oevents->getUserBookingByEventId($oevents->id))
                             @php
-                                switch ($oevents->category_id) {
-                                    case '1':
+                                switch ($oevents->category->name) {
+                                    case 'Essay':
                                         $route_create = 'essay.create';
                                         break;
-                                    case '2':
+                                    case 'MCQs':
                                         $route_create = 'mcqs.create';
                                         break;
                                     
@@ -109,7 +109,7 @@
                                 }
                             @endphp
 
-                            @if ($is_drafted = $oevents->eventIsDrafted($oevents->id, $oevents->category_id))
+                            @if ($is_drafted = $oevents->eventIsDrafted($oevents->id, $oevents->category->name))
                                 @if ($is_drafted->is_drafted)
                                     <a href="{{ route($route_create, ['id' => $oevents->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>
                                 @endif

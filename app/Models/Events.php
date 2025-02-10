@@ -73,21 +73,21 @@ class Events extends Model
      * get essay is drafted by event id
      *
      * @param int $event_id
-     * @param int $category_id
+     * @param string $category_name
      * @return object|null
      **/
-    public function eventIsDrafted(int $event_id = null, int $category_id = null)
+    public function eventIsDrafted(int $event_id = null, string $category_name = null)
     {
         if(Auth::check()){
             if(empty($event_id)){
                 return 0;
             }else{
                 try{
-                    switch($category_id){
-                        case '1':
+                    switch($category_name){
+                        case 'Essay':
                             return Essay::where('user_id', Auth::user()->id)->where('event_id', $event_id)->firstOrFail();
                             break;
-                        case '2':
+                        case 'MCQs':
                             return Mcqs::where('user_id', Auth::user()->id)->where('event_id', $event_id)->firstOrFail();
                             break;
                         default:

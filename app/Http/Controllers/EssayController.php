@@ -26,18 +26,22 @@ class EssayController extends Controller
     {
         try{
             $event = Events::findOrFail($request->id);
-            if($event->end_at <= now()->format('Y-m-d H:i:s')){
-                return back()->with('info', 'Event is closed now.');
-            }
-            $booking = $event->getUserBookingByEventId($request->id);
-            $essay = $event->eventIsDrafted($request->id, $event->category_id);
-            if($booking){
-                if($essay){
-                    return view('essay.create', compact('event', 'essay'));
+            if($event->category->name == 'Essay'){
+                if($event->end_at <= now()->format('Y-m-d H:i:s')){
+                    return back()->with('info', 'Event is closed now.');
                 }
-                return view('essay.create', compact('event'));
+                $booking = $event->getUserBookingByEventId($request->id);
+                $essay = $event->eventIsDrafted($request->id, $event->category->name);
+                if($booking){
+                    if($essay){
+                        return view('essay.create', compact('event', 'essay'));
+                    }
+                    return view('essay.create', compact('event'));
+                }else{
+                    return back()->with('info', 'First enroll to the event and then try to start the event.');
+                }
             }else{
-                return back()->with('info', 'First enroll to the event and then try to start the event.');
+                return back()->with('info', 'You are not allowd.');
             }
         }catch(ModelNotFoundException $e){
             return back()->with('error', $e->getMessage());
@@ -116,9 +120,13 @@ class EssayController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Essay $essay)
+    public function show(Essay $essay): View
     {
-        //
+        if($essay->user_id == Auth::user()->id){
+            return view('essay.show', compact('essay'));
+        }else{
+            return back()->with('error', 'You are not allowed to access another essays.');
+        }
     }
 
     /**

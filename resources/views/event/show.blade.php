@@ -74,15 +74,30 @@
                                 {{ __('Event will start soon!') }}
                             @else
                                 @if($event->getUserBookingByEventId($event->id))
-                                    @if ($is_drafted = $event->eventIsDrafted($event->id, $event->category_id))
+                                    @php
+                                        switch ($event->category->name) {
+                                            case 'Essay':
+                                                $route_create = 'essay.create';
+                                                break;
+                                            case 'MCQs':
+                                                $route_create = 'mcqs.create';
+                                                break;
+                                            
+                                            default:
+                                                $route_create = null;
+                                                break;
+                                        }
+                                    @endphp
+
+                                    @if ($is_drafted = $event->eventIsDrafted($event->id, $event->category->name))
                                         @if ($is_drafted->is_drafted)
-                                            {{ __("$event->name, is in draft. ") }}<a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
+                                            {{ __("$event->name, is in draft. ") }}<a href="{{ route($route_create, ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Resume Now') }}</a>{{ __(' to finish it.') }}
                                         @endif
                                         @if ($is_drafted->is_submitted)
                                             <span class="card-link oevents_enroll_now">{{ __("$event->name, has been submitted.") }}</span>
                                         @endif
                                     @else
-                                        <a href="{{ route('essay.create', ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
+                                        <a href="{{ route($route_create, ['id' => $event->id]) }}" class="card-link oevents_enroll_now">{{ __('Start Now') }}</a>
                                     @endif
                                 @else
                                     <form action="{{ route('booking.store') }}" method="post">
