@@ -1,95 +1,75 @@
 @extends('admin.layout.app')
 
-@section('title', 'Categories')
-
 @section('content')
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Categories</h4>
 
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">UI Elements /</span> Cards Basic</h4>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Categories</h5>
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> Create Category
+            </a>
+        </div>
 
-<div class="card">
-    <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
-        <h5 class="card-header">{{ __('Categories') }}</h5>
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary border-0 m-3">
-            <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Categories
-        </a>
-    </div>
-    <div class="table-responsive text-nowrap">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                    <th>Created By</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @forelse ($categories as $category)
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <th scope="row"> {{ ++$i }} </th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Created By</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @forelse($categories as $category)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $category->name }}</td>
                         <td>
-                            @switch($category->status)
-                                @case('active')
-                                    <span class="badge rounded-pill bg-success">{{ $category->status }}</span>
-                                    @break
-
-                                @case('inactive')
-                                    <span class="badge rounded-pill bg-danger">{{ $category->status }}</span>
-                                    @break
-                            
-                                @default
-                                    <span></span>                                    
-                            @endswitch
+                            @if($category->status === 'active')
+                                <span class="badge bg-success">Active</span>
+                            @else
+                                <span class="badge bg-danger">Inactive</span>
+                            @endif
                         </td>
                         <td>{{ $category->notes }}</td>
                         <td>{{ $category->user->name }} ({{ $category->user->getRoleNames()->implode(' | ') }})</td>
                         <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-info dropdown-toggle p-2" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-cog"></i>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
-                                <ul class="dropdown-menu" style="">
-                                    {{-- <li>
-                                        <a class="dropdown-item d-flex align-items-center text-info" href="{{ route('admin.categories.show',$category->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3">View</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li> --}}
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('admin.categories.edit', $category->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <a type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></a>
-                                        </form>
-                                    </li>
-                                </ul>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('admin.categories.edit', $category->id) }}">
+                                        <i class="bx bx-edit me-1"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this category?')">
+                                            <i class="bx bx-trash me-1"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                        </td>    
+                        </td>
                     </tr>
-                @empty
+                    @empty
                     <tr>
-                        <td colspan="3" class="text-center">{{ __('No record found!') }}</td>
-                    </tr>                    
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">
-                        {!! $categories->links('pagination::bootstrap-5') !!}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>    
+                        <td colspan="6" class="text-center">No categories found</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
+        <div class="card-footer">
+            {!! $categories->links('pagination::bootstrap-5') !!}
+        </div>
+    </div>
+</div>
 @endsection

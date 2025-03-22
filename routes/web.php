@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\McqsController;
+use App\Http\Controllers\EventFeedbackController;
 use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
@@ -32,6 +33,18 @@ Route::middleware('auth')->group(function () {
         'essay'     => EssayController::class,
         'mcqs'      => McqsController::class
     ]);
+
+    Route::post('/events/{event}/feedback', [EventFeedbackController::class, 'store'])
+        ->name('event.feedback.store');
+
+    Route::put('/feedback/{feedback}', [EventFeedbackController::class, 'update'])
+        ->name('event.feedback.update');
+
+    Route::get('/feedback/{feedback}/edit', [EventFeedbackController::class, 'edit'])
+        ->name('event.feedback.edit');
+
+    Route::get('/event/{event}/show/{user}', [EventFeedbackController::class, 'show'])
+        ->name('event.show.view');
 });
 
 Route::fallback(function(){

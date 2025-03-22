@@ -1,121 +1,99 @@
 @extends('admin.layout.app')
 
-@section('title', 'Events')
-
 @section('content')
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Events</h4>
 
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">UI Elements /</span> Cards Basic</h4>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Events</h5>
+            <a href="{{ route('admin.events.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> Create Event
+            </a>
+        </div>
 
-<div class="card">
-    <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
-        <h5 class="card-header">{{ __('Events') }}</h5>
-        <a href="{{ route('admin.events.create') }}" class="btn btn-primary border-0 m-3">
-            <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create Events
-        </a>
-    </div>
-    <div class="table-responsive text-nowrap">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Created By</th>
-                    <th>Started At</th>
-                    <th>End At</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @forelse ($events as $event)
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <th scope="row"> {{ ++$i }} </th>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Event Period</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @forelse($events as $event)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $event->name }}</td>
                         <td>{{ $event->category->name }}</td>
                         <td>
-                            @switch($event->status)
-                                @case('active')
-                                    <span class="badge rounded-pill bg-success">{{ $event->status }}</span>
-                                    @break
-
-                                @case('inactive')
-                                    <span class="badge rounded-pill bg-danger">{{ $event->status }}</span>
-                                    @break
-                            
-                                @default
-                                    <span></span>                                    
-                            @endswitch
+                            @if($event->status === 'active')
+                                <span class="badge bg-success">Active</span>
+                            @else
+                                <span class="badge bg-danger">Inactive</span>
+                            @endif
                         </td>
-                        <td>{{ $event->user->name }} ({{ $event->user->getRoleNames()->implode(' | ') }})</td>
-                        <td>{{ \Carbon\Carbon::parse($event->started_at)->format('d-m-Y h:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($event->end_at)->format('d-m-Y h:i A') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($event->created_at)->format('d-m-Y h:i A') }}</td>
+                        <td>{{ $event->user->name }}</td>
                         <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-info dropdown-toggle p-2" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-cog"></i>
-                                </button>
-                                <ul class="dropdown-menu" style="">
-                                    {{-- <li>
-                                        <a class="dropdown-item d-flex align-items-center text-info" href="{{ route('admin.categories.show',$category->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3">View</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li> --}}
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center text-success" href="{{ route('admin.events.active',$event->id) }}"><span class="tf-icons bx bx-check"></span><span class="ms-3 text-upercase">Active</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    @if ($event->category->name == 'MCQs')
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center text-primary" href="{{ route('admin.questionoptions.viewquestion', $event->id) }}"><span class="tf-icons bx bx-plus"></span><span class="ms-3 text-upercase">Add Questions</span></a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                    @endif
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center text-danger" href="{{ route('admin.events.inactive',$event->id) }}"><span class="tf-icons bx bx-x"></span><span class="ms-3 text-upercase">Inactive</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('admin.events.edit', $event->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></button>
-                                        </form>
-                                    </li>
-                                </ul>
+                            <div class="text-muted small">
+                                Start: {{ \Carbon\Carbon::parse($event->started_at)->format('M d, Y h:i A') }}<br>
+                                End: {{ \Carbon\Carbon::parse($event->end_at)->format('M d, Y h:i A') }}
                             </div>
-                        </td>    
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="text-center">{{ __('No record found!') }}</td>
-                    </tr>                    
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">
-                        {!! $events->links('pagination::bootstrap-5') !!}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>    
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    @if ($event->category->name == 'MCQs')
+                                        <a class="dropdown-item" href="{{ route('admin.questionoptions.viewquestion', $event->id) }}">
+                                            <i class="bx bx-plus me-1"></i> Add Questions
+                                        </a>
+                                    @endif
+                                    
+                                    <a class="dropdown-item" href="{{ route('admin.events.edit', $event->id) }}">
+                                        <i class="bx bx-edit me-1"></i> Edit
+                                    </a>
 
+                                    @if($event->status === 'inactive')
+                                        <a class="dropdown-item" href="{{ route('admin.events.active', $event->id) }}">
+                                            <i class="bx bx-check me-1"></i> Activate
+                                        </a>
+                                    @else
+                                        <a class="dropdown-item" href="{{ route('admin.events.inactive', $event->id) }}">
+                                            <i class="bx bx-x me-1"></i> Deactivate
+                                        </a>
+                                    @endif
+
+                                    <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this event?')">
+                                            <i class="bx bx-trash me-1"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No events found</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            {{ $events->links() }}
+        </div>
+    </div>
+</div>
 @endsection

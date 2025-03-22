@@ -7,6 +7,7 @@ use App\Models\Events;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Models\EventFeedback;
 
 class HomeController extends Controller
 {
@@ -16,10 +17,43 @@ class HomeController extends Controller
     public function index()
     {
         $currentDatetime = Carbon::now();
-        $ongoing_events = Events::with('booking')->where('started_at', '<=', $currentDatetime)->where('end_at', '>=', $currentDatetime)->where('status','=','active')->get();
-        $upcomming_events = Events::with('booking')->where('started_at', '>=', $currentDatetime)->where('status','=','active')->get();
+        
+        // Event counts and latest events
+        $active_events_count = Events::where('status', 'active')->count();
+        $latest_events = Events::with(['category', 'booking'])
+            ->where('status', 'active')
+            ->latest()
+            ->take(5)
+            ->get();
 
-        return view('welcome', compact('ongoing_events', 'upcomming_events'));
+        // Event categories
+        $ongoing_events = Events::with('booking')
+            ->where('started_at', '<=', $currentDatetime)
+            ->where('end_at', '>=', $currentDatetime)
+            ->where('status', '=', 'active')
+            ->latest()
+            ->get();
+
+        $upcomming_events = Events::with('booking')
+            ->where('started_at', '>=', $currentDatetime)
+            ->where('status', '=', 'active')
+            ->latest()
+            ->get();
+
+        $closed_events = Events::with('booking')
+            ->where('end_at', '<', $currentDatetime)
+            ->orWhere('status', '=', 'inactive')
+            ->latest()
+            ->limit(4)
+            ->get();
+
+        return view('welcome', compact(
+            'ongoing_events',
+            'upcomming_events',
+            'closed_events',
+            'active_events_count',
+            'latest_events'
+        ));
     }
 
     /**
@@ -43,8 +77,19 @@ class HomeController extends Controller
      */
     public function show(string $id): View
     {
+        // $event = Events::find($id);
+        // return view('event.show', compact('event'));
         $event = Events::find($id);
-        return view('event.show', compact('event'));
+
+        $topEvents = Events::withAvg('feedback', 'rating')
+            ->orderBy('feedback_avg_rating', 'desc')
+            ->take(3)
+            ->get();
+
+        return view('event.show', [
+            'event' => $event,
+            'topEvents' => $topEvents
+        ]);        
     }
 
     /**

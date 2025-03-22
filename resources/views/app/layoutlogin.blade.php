@@ -29,7 +29,7 @@
         rel="stylesheet"
     />
 
-    @yield('style');
+    @yield('style')
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />

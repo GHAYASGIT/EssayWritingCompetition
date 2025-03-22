@@ -14,7 +14,11 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
+        $bookings = Booking::with(['user', 'event'])
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(10);
+
+        return view('admin.bookings.index', compact('bookings'));
     }
 
     /**
@@ -38,7 +42,8 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
+        $booking->load(['user', 'event.category']);
+        return view('admin.bookings.show', compact('booking'));
     }
 
     /**
@@ -62,6 +67,8 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        //
+        $booking->delete();
+        return redirect()->route('admin.booking.index')
+                        ->with('success', 'Booking deleted successfully.');
     }
 }

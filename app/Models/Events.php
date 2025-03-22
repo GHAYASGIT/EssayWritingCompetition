@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use App\Models\EventFeedback;
 
 class Events extends Model
 {
@@ -33,6 +34,33 @@ class Events extends Model
         'status',
     ];
 
+    protected $casts = [
+        'started_at' => 'datetime',
+        'end_at' => 'datetime'
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::retrieved(function ($event) {
+            if ($event->status === 'active' && $event->end_at < now()) {
+                $event->status = 'inactive';
+                $event->save();
+            }
+        });
+    }
+
+    public function feedback() : object
+    {
+        return $this->hasMany(EventFeedback::class, 'event_id', 'id');
+    }
+
+    /**
+     * Get the user that owns the Event
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user() : object {
         return $this->belongsTo(Admin::class);
     }
@@ -49,10 +77,10 @@ class Events extends Model
      * get the events booking for the specific user
      *
      *
-     * @param int $event_id
+     * @param int|null $event_id
      * @return object|null
      **/
-    public function getUserBookingByEventId(int $event_id = null)
+    public function getUserBookingByEventId(?int $event_id = null)
     {
         if(Auth::check()){
             if(empty($event_id)){
@@ -72,11 +100,11 @@ class Events extends Model
     /**
      * get essay is drafted by event id
      *
-     * @param int $event_id
-     * @param int $category_id
+     * @param int|null $event_id
+     * @param int|null $category_id
      * @return object|null
      **/
-    public function eventIsDrafted(int $event_id = null, int $category_id = null)
+    public function eventIsDrafted(?int $event_id = null, ?int $category_id = null)
     {
         if(Auth::check()){
             if(empty($event_id)){
@@ -103,4 +131,79 @@ class Events extends Model
             return 0;
         }
     }
+
+    /**
+     * Get MCQs associated with the specific event.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     **/
+    public function getMcqs(?int $user_id = null)
+    {
+        if(empty($user_id)){
+            return $this->hasMany(Mcqs::class, 'event_id')->get();
+        }else{
+            try{
+                return $this->hasMany(Mcqs::class, 'event_id')->where('user_id', $user_id)->firstOrFail();
+            }catch(ModelNotFoundException $e){
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Get Essays associated with the specific event.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     **/
+    public function getEssays(?int $user_id = null)
+    {
+        if(empty($user_id)){
+            return $this->hasMany(Essay::class, 'event_id')->get();
+        }else{
+            try{
+                return $this->hasMany(Essay::class, 'event_id')->where('user_id', $user_id)->firstOrFail();
+            }catch(ModelNotFoundException $e){
+                return null;
+            }
+        }
+    }
+
+    public function getEventType(){
+        switch (strtolower($this->category()->first()->name)) {
+            case 'essay':
+                return 'essay';
+                break;
+            case 'mcqs':
+                return 'mcqs';
+                break;
+            default:
+                return null;
+        }
+    }
+
+    public function getIsSubmitted(int $user_id )
+    {
+        switch (strtolower($this->category()->first()->name)) {
+            case 'essay':
+                if(empty($this->getEssays($user_id))){
+                    return null;
+                }else{
+                    return $this->getEssays($user_id)->is_submitted;
+                }
+                break;
+
+            case 'mcqs':
+                if(empty($this->getMcqs($user_id))){
+                    return null;
+                }else{
+                    return $this->getMcqs($user_id)->is_submitted;
+                }
+                break;
+
+            default:
+                return null;
+                break;
+        }
+    }
+
 }

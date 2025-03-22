@@ -1,107 +1,82 @@
 @extends('admin.layout.app')
 
-@section('title', 'Users')
-
 @section('content')
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">Users</h4>
 
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">UI Elements /</span> Cards Basic</h4>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Users</h5>
+            <a href="{{ route('admin.user.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> Create User
+            </a>
+        </div>
 
-<div class="card">
-    <div class="d-flex justify-content-between border-bottom border-3 border-dark mb-4">
-        <h5 class="card-header">{{ __('Users') }}</h5>
-        <a href="{{ route('admin.user.create') }}" class="btn btn-primary border-0 m-3">
-            <span class="tf-icons bx bx-plus-circle"></span>&nbsp; Create User
-        </a>
-    </div>
-    <div class="table-responsive text-nowrap">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>{{ __('#ID') }}</th>
-                    <th>{{ __('Name') }}</th>
-                    <th>{{ __('Email') }}</th>
-                    <th>{{ __('Role') }}</th>
-                    <th>{{ __('Last Updated') }}</th>
-                    <th>{{ __('Actions') }}</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @forelse ($users as $user)
-                    @if(!$user->hasRole('super-admin'))
-                        <tr>
-                            <th scope="row"> {{ ++$i }} </th>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                <div class="overflow-auto" style="width: 450px">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @forelse ($users as $user)
+                        @if(!$user->hasRole('super-admin'))
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>
                                     @forelse ($user->getRoleNames() as $rolename)
-                                        <label class="badge bg-primary mx-1">{{ $rolename }}</label>
+                                        <span class="badge bg-primary me-1">{{ $rolename }}</span>
                                     @empty
-                                        <label class="badge bg-info mx-1">{{ __('Role not assigned.') }}</label>
+                                        <span class="badge bg-info">No Role</span>
                                     @endforelse
-                                </div>
-                            </td>
-                            <td>{{ $user->updated_at->format('d-m-Y h:m A') }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-info dropdown-toggle p-2" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bx bx-cog"></i>
-                                    </button>
-                                    <ul class="dropdown-menu" style="">
-                                        {{-- <li>
-                                            <a class="dropdown-item d-flex align-items-center text-info" href="{{ route('admin.categories.show',$category->id) }}"><span class="tf-icons bx bx-show"></span><span class="ms-3">View</span></a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li> --}}
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('admin.profile.edit', $user->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit Profile</span></a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center text-warning" href="{{ route('admin.user.edit', $user->id) }}"><span class="tf-icons bx bx-edit"></span><span class="ms-3">Edit</span></a>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST">
+                                </td>
+                                <td>{{ $user->updated_at->format('M d, Y h:i A') }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{{ route('admin.profile.edit', $user->id) }}">
+                                                <i class="bx bx-user me-1"></i> Edit Profile
+                                            </a>
+                                            <a class="dropdown-item" href="{{ route('admin.user.edit', $user->id) }}">
+                                                <i class="bx bx-edit me-1"></i> Edit Roles
+                                            </a>
+                                            <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="dropdown-item d-flex align-items-center text-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span><span class="ms-3">Delete</span></button>
+                                                <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this user?')">
+                                                    <i class="bx bx-trash me-1"></i> Delete
+                                                </button>
                                             </form>
-                                        </li>
-                                    </ul>
-                                </div>                                
-                                {{-- <form action="{{ route('admin.user.destroy',$user->id) }}" method="POST">
-                                    <a class="btn rounded-pill btn-icon btn-info" href="{{ route('admin.user.show',$user->id) }}"><span class="tf-icons bx bx-show"></span></a>
-                                    <a class="btn btn-icon btn-outline-success" href="{{ route('admin.user.edit',$user->id) }}"><span class="tf-icons bx bx-edit"></span></a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-icon btn-outline-danger" onclick="return confirm('Are you sure?');"><span class="tf-icons bx bx-trash"></span></button>
-                                </form> --}}
-                            </td>    
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">No users found</td>
                         </tr>
-                    @endif
-                @empty
-                    <tr>
-                        <td colspan="3" class="text-center">{{ __('No record found!') }}</td>
-                    </tr>                    
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">
-                        {{$users->links()}}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            {{ $users->links() }}
+        </div>
     </div>
 </div>
-
 @endsection
 
 @section('script')
