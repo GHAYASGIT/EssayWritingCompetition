@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mcqs;
 use App\Models\Events;
+use App\Models\McqScore;
 use Illuminate\Http\Request;
 use App\Models\QuestionOptions;
 use Illuminate\Contracts\View\View;
@@ -90,7 +91,7 @@ class McqsController extends Controller
 
             return view('mcq.show', compact('data'));
         }else{
-            return back()->with('error', 'You are not allowed to access another essays.');
+            return back()->with('error', 'You are not allowed to access another mcqs.');
         }
     }
 
@@ -116,5 +117,43 @@ class McqsController extends Controller
     public function destroy(Mcqs $mcqs)
     {
         //
+    }
+
+    /**
+     * Calculate Mcqs Result
+     *
+     * @param Mcqs $mcqs provide mcqs model
+     * @return float|null
+     * @throws conditon
+     **/
+    public static function calculateMcqsResult(Mcqs $mcqs): float|null
+    {
+        foreach(json_decode($mcqs->content) as $key => $value){
+            $qo = QuestionOptions::find($key);
+            if($qo->correct_option == $value->option){
+                $correct[] = $value->option;
+            }
+        }
+
+        $all_qo = QuestionOptions::getByEventId($mcqs->event_id);
+
+        $percentage = null;
+
+        if($all_qo->count() != 0){
+            $percentage = (count($correct) / $all_qo->count()) * 100;
+        }
+
+        McqScore::updateOrCreate(
+            [
+                'event_id'  => $mcqs->event_id,
+                'user_id'   => Auth::id()
+            ],
+            [
+                'score'                 => $percentage ?? 0,
+                'correct_mcqs_count'    => count($correct ?? 0),
+            ]
+        );
+
+        return number_format($percentage, 2, '.');
     }
 }

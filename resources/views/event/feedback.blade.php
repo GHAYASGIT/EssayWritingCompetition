@@ -6,16 +6,18 @@
 
 <div class="container">
     <h1>Feedback for Event: {{ $event->name }}</h1>
-
-    <a href="{{ route('event.show', $event->id) }}" class="btn btn-primary">Back to Event</a>
 </div>
 
 <div class="container">
     @auth
     <div class="row">
         <div class="col-md-8">
-            @dd($essay_event->content)
-            {{ $essay_event->content }}            
+            @isset($essay_event->content)
+                {{ $essay_event->content }}
+            @endif
+            @isset ($score)
+                {{ __('You get the score : ') }}{{ $score }}{{ '%' }}
+            @endif
         </div>
         <div class="col-md-4">
             <x-event-feedback-form 

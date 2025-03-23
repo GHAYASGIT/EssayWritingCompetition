@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Events;
 use App\Models\EventFeedback;
+use App\Models\QuestionOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -108,12 +110,11 @@ class EventFeedbackController extends Controller
         
         if($eventType == 'mcqs'){
             $mcqs_event = $event->getMcqs($userId);
+            $score = McqsController::calculateMcqsResult($mcqs_event);
         }else{
-            $mcqs_event = null;
+            $score = null;
         }
 
-        return view('event.feedback', compact('event', 'userId', 'essay_event', 'mcqs_event'));
-
-        return view('event.feedback', compact('event', 'userId', 'essay_event', 'mcqs_event'));
+        return view('event.feedback', compact('event', 'userId', 'essay_event', 'score'));
     }
 }

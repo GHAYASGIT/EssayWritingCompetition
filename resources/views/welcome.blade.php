@@ -188,7 +188,7 @@
                                                 default => null
                                             };
                                         @endphp
-                                        @if($is_drafted = $event->eventIsDrafted($event->id, $event->category_id))
+                                        @if(null !== $is_drafted = $event->eventIsDrafted())
                                             @if($is_drafted->is_drafted)
                                                 <a href="{{ route($route_create, ['id' => $event->id]) }}" class="btn btn-warning">
                                                     <i class="bx bx-edit"></i> Resume Draft

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\McqsController;
 
 class Booking extends Model
 {
@@ -34,6 +35,11 @@ class Booking extends Model
 
     public function event() : object {
         return $this->belongsTo(Events::class);
+    }
+
+    public function getMcqScore(Mcqs $mcq): float
+    {
+        return McqsController::calculateMcqsResult($mcq);
     }
 
 }

@@ -129,38 +129,50 @@
                                 <thead>
                                     <tr>
                                         <th>{{ __('Name') }}</th>
-                                        <th>{{ __('Status') }}</th>
-                                        <th>{{ _('Action') }}</th>
+
+                                        @if($event->getEventType() == 'essay')
+                                            <th>{{ __('Status') }}</th>
+                                            <th>{{ _('Action') }}</th>
+                                        @endif
+
+                                        @if($event->getEventType() == 'mcqs')
+                                            <th>{{ __('Score') }}</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($event->booking as $booking)
                                         <tr>
                                             <td>{{ $booking->user->name }}</td>
-                                            <td>
-                                                @if($booking->event->getIsSubmitted($booking->user->id) == null)
-                                                    <!-- Code for when the submission is blank -->
-                                                @else
-                                                    @if($booking->event->getIsSubmitted($booking->user->id))
-                                                        <span class="badge bg-success">{{ __('Submitted') }}</span>
-                                                    @else
-                                                        <span class="badge bg-warning">{{ __('In Progress') }}</span>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @auth                                                    
+                                            @if($event->getEventType() == 'essay')
+                                                <td>
                                                     @if($booking->event->getIsSubmitted($booking->user->id) == null)
                                                         <!-- Code for when the submission is blank -->
                                                     @else
-                                                        @if($booking->event->getIsSubmitted($booking->user->id) && $booking->user->id !== auth()->id())
-                                                            <a href="{{ route('event.show.view', [$event->id, $booking->user->id]) }}" class="btn btn-sm btn-primary hover-scale">
-                                                                <i class='bx bx-show'></i> {{ __('Give Your Feedback') }}
-                                                            </a>
+                                                        @if($booking->event->getIsSubmitted($booking->user->id))
+                                                            <span class="badge bg-success">{{ __('Submitted') }}</span>
+                                                        @else
+                                                            <span class="badge bg-warning">{{ __('In Progress') }}</span>
                                                         @endif
                                                     @endif
-                                                @endauth
-                                            </td>
+                                                </td>
+                                                <td>
+                                                    @auth
+                                                        @if($booking->event->getIsSubmitted($booking->user->id) == null)
+                                                            <!-- Code for when the submission is blank -->
+                                                        @else
+                                                            @if($booking->event->getIsSubmitted($booking->user->id) && $booking->user->id !== auth()->id())
+                                                                <a href="{{ route('event.show.view', [$event->id, $booking->user->id]) }}" class="btn btn-sm btn-primary hover-scale">
+                                                                    <i class='bx bx-show'></i> {{ __('Give Your Feedback') }}
+                                                                </a>
+                                                            @endif
+                                                        @endif
+                                                    @endauth
+                                                </td>
+                                            @endif
+                                            @if($booking->event->getEventType() == 'mcqs')
+                                                <td>{{ $booking->getMcqScore($booking->event->getMcqs($booking->user->id)) }}{{ '%' }}</td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -180,16 +192,18 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="divider my-5">
-            <div class="divider-text text-uppercase"><span class="display-3">{{ __('Reviews & Feedback') }}</span></div>
+@if ($event->getEventType() != 'mcqs')
+    <div class="container">
+        <div class="row">
+            <div class="divider my-5">
+                <div class="divider-text text-uppercase"><span class="display-3">{{ __('Reviews & Feedback') }}</span></div>
+            </div>
         </div>
+        @auth
+            <x-event-feedback-list :event="$event" />
+        @endauth
     </div>
-    @auth
-        <x-event-feedback-list :event="$event" />
-    @endauth
-</div>
+@endif
 
 @endsection
 
