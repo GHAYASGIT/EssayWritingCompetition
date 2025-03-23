@@ -17,6 +17,9 @@
                         <li>
                             <p class="nav-link" onclick="showGenre(this)" id="inrolment-tab" data-bs-toggle="tab" data-bs-target="#inrolment-tab-pane" type="button" role="tab" aria-controls="inrolment-tab-pane" aria-selected="false">{{ __('Inrolments') }}</p>                   
                         </li>
+                        <li>
+                            <p class="nav-link" onclick="showGenre(this)" id="event-tab" data-bs-toggle="tab" data-bs-target="#event-tab-pane" type="button" role="tab" aria-controls="event-tab-pane" aria-selected="false">{{ __('Submitted Events') }}</p>
+                        </li>
                     </ul>
                 </li>
 
@@ -25,6 +28,9 @@
                 </li>
                 <li class="nav-item d-none d-lg-block d-md-block" role="presentation">
                   <p class="nav-link" id="inrolment-tab" data-bs-toggle="tab" data-bs-target="#inrolment-tab-pane" type="button" role="tab" aria-controls="inrolment-tab-pane" aria-selected="false">{{ __('Inrolments') }}</p>
+                </li>
+                <li class="nav-item d-none d-lg-block d-md-block" role="presentation">
+                    <p class="nav-link" id="event-tab" data-bs-toggle="tab" data-bs-target="#event-tab-pane" type="button" role="tab" aria-controls="event-tab-pane" aria-selected="false">{{ __('Submitted Events') }}</p>
                 </li>
             </ul>
         </div>
@@ -128,6 +134,85 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="event-tab-pane" role="tabpanel" aria-labelledby="event-tab" tabindex="0">
+                    <div class="row">
+                        <div class="divider">
+                            <div class="divider-text text-uppercase"><span class="display-6">{{ __('Your Submitted Events') }}</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h5 class="card-header">{{ __('Enrolments') }}</h5>
+                        <div class="table-responsive text-nowrap">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('Event Id') }}</th>
+                                        <th>{{ __('Event Name') }}</th>
+                                        <th>{{ __('Event Ended at') }}</th>
+                                        <th>{{ __('View') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($bookings as $booking)
+                                        <tr>
+                                            @php
+                                                switch ($booking->event->category->name) {
+                                                    case 'Essay':
+                                                        $essay = $booking->event->eventIsDrafted($booking->event->id, $booking->event->category->name);
+
+                                                        if(!empty($essay->is_submitted) && $essay->is_submitted){
+                                                            $id = $essay->id;
+                                                        }else{
+                                                            $id = 0;
+                                                        }
+
+                                                        $route_view = 'essay.show';
+                                                        break;
+                                                    case 'MCQs':
+                                                        $mcq = $booking->event->eventIsDrafted($booking->event->id, $booking->event->category->name);
+
+                                                        if(!empty($mcq->id) && $mcq->is_submitted){
+                                                            $id = $mcq->id;
+                                                        }else{
+                                                            $id = 0;
+                                                        }
+
+                                                        $route_view = 'mcqs.show';
+                                                        break;
+                                                    
+                                                    default:
+                                                        $route_view = null;
+                                                        break;
+                                                }
+                                            @endphp
+
+                                            @if ($id !=0 )
+                                                <td>{{ __($booking->event->id) }}</td>
+                                                <td>{{ __($booking->event->name) }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($booking->event->end_at)->format('d-m-Y h:i A') }}</td>
+                                                <td>
+                                                    <a href="{{ route($route_view, $id) }}" class="card-link">{{ __('View') }}</a>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">{{ __('No record found!') }}</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3">
+                                            {!! $bookings->links('pagination::bootstrap-5') !!}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>                
             </div>              
         </div>
     </div>

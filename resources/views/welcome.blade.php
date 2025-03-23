@@ -291,18 +291,6 @@
     .hover-scale:hover {
         transform: scale(1.03);
     }
-    .nav-tabs .nav-link {
-        border: none;
-        color: #6c757d;
-    }
-    .nav-tabs .nav-link.active {
-        color: #0d6efd;
-        border-bottom: 2px solid #0d6efd;
-    }
-    .card {
-        border-radius: 0.5rem;
-        overflow: hidden;
-    }
 </style>
 
 

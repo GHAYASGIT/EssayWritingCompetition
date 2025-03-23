@@ -14,6 +14,7 @@
     @auth
     <div class="row">
         <div class="col-md-8">
+            @dd($essay_event->content)
             {{ $essay_event->content }}            
         </div>
         <div class="col-md-4">
