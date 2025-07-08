@@ -123,7 +123,7 @@
                                                     document.write(new Date().getFullYear());
                                                 </script>
                                                 , made by
-                                                <a href="#" target="_blank" class="footer-link fw-bolder">Pankaj Kumar</a>
+                                                <a href="#" target="_blank" class="footer-link fw-bolder">The Web Brain Technology</a>
                                             </div>
 
                                             {{-- <div>

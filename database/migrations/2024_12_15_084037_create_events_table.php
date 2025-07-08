@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('subscribers');
             $table->string('description')->nullable();
             $table->timestamp('started_at');
-            $table->timestamp('end_at');
+            $table->timestamp('end_at')->nullable();
             $table->enum('status', ['active', 'inactive']);
             $table->foreign('user_id')->references('id')->on('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete()->cascadeOnUpdate();
